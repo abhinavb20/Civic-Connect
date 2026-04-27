@@ -1,0 +1,196 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import style from "./Complaint.module.css";
+
+const Complaint = () => {
+  const [complaints, setComplaints] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
+  // Form stats
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const userId = sessionStorage.getItem("userId");
+
+  const loadData = async () => {
+    try {
+      const depRes = await axios.get("http://localhost:5000/department");
+      setDepartments(depRes.data.departmentData || []);
+
+      if (userId) {
+        const compRes = await axios.get(`http://localhost:5000/complaintByUser/${userId}`);
+        setComplaints(compRes.data.data || []);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleSubmit = async () => {
+    let newErrors = {};
+
+    if (!title.trim()) newErrors.title = "Enter a title";
+    if (!content.trim()) newErrors.content = "Enter a description";
+    if (!departmentId) newErrors.department = "Select a department category";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    const fd = new FormData();
+    fd.append("userId", userId);
+    fd.append("departmentId", departmentId);
+
+    // ⭐ IMPORTANT — field names must match backend
+    fd.append("title", title);
+    fd.append("content", content);
+
+    if (photo) fd.append("photo", photo);
+
+    try {
+      await axios.post("http://localhost:5000/complaint", fd);
+
+      alert("Complaint Submitted Successfully");
+
+      setTitle("");
+      setContent("");
+      setDepartmentId("");
+      setPhoto(null);
+      setErrors({});
+
+      loadData();
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit complaint");
+    }
+  };
+
+  const handleSupport = async (complaintId) => {
+    try {
+      await axios.post(
+        `http://localhost:5000/complaint/${complaintId}/support`,
+        { userId }
+      );
+      loadData();
+    } catch (err) {
+      console.error(err);
+      if (err.response?.status === 400) {
+        alert("You have already supported this issue.");
+      }
+    }
+  };
+
+  return (
+    <div className={style.page}>
+      <div className={style.wrapper}>
+
+        <div className={style.header}>
+          <span className={style.badge}>Civic Connect</span>
+          <h2 className={style.title}>Report a Local Issue</h2>
+          <p className={style.subtitle}>Submit details about a problem in your ward. Your report will be sent directly to the local authority.</p>
+        </div>
+
+        <div className={style.formCard}>
+          <h3 className={style.sectionTitle}>New Complaint Form</h3>
+
+          <div className={style.formRow}>
+            <div className={style.field}>
+              <label>Issue Title</label>
+              <input type="text" className={`${style.input} ${errors.title ? style.inputError : ''}`} value={title} onChange={e => { setTitle(e.target.value); setErrors({ ...errors, title: '' }) }} placeholder="e.g., Broken streetlight on Main St" />
+              {errors.title && <span className={style.error}>{errors.title}</span>}
+            </div>
+
+            <div className={style.field}>
+              <label>Category (Department)</label>
+              <select className={`${style.input} ${errors.department ? style.inputError : ''}`} value={departmentId} onChange={e => { setDepartmentId(e.target.value); setErrors({ ...errors, department: '' }) }}>
+                <option value="">Select Category</option>
+                {departments.map(d => <option key={d._id} value={d._id}>{d.departmentName}</option>)}
+              </select>
+              {errors.department && <span className={style.error}>{errors.department}</span>}
+            </div>
+
+            <div className={style.field} style={{ gridColumn: "1 / -1" }}>
+              <label>Detailed Description</label>
+              <textarea className={`${style.textarea} ${errors.content ? style.inputError : ''}`} value={content} onChange={e => { setContent(e.target.value); setErrors({ ...errors, content: '' }) }} placeholder="Describe the issue in detail, including landmarks or specific impact." rows="4"></textarea>
+              {errors.content && <span className={style.error}>{errors.content}</span>}
+            </div>
+
+            <div className={style.field}>
+              <label>Attach Evidence Photo (Optional)</label>
+              <input type="file" className={style.fileInput} onChange={e => setPhoto(e.target.files[0])} />
+            </div>
+
+            <div className={style.actionGroup} style={{ gridColumn: "1 / -1" }}>
+              <button className={style.primaryBtn} onClick={handleSubmit}>Submit Complaint</button>
+            </div>
+          </div>
+        </div>
+
+        <div className={style.tableCard}>
+          <div className={style.tableHeader}>
+            <h3 className={style.sectionTitle}>Your Submitted Complaints</h3>
+          </div>
+          <div className={style.tableWrapper}>
+            <table className={style.complaintTable}>
+              <thead>
+                <tr>
+                  <th>Resolved Details</th>
+                  <th>Category</th>
+                  <th>Issue</th>
+                  <th>Status</th>
+                  <th>Support Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {complaints.length > 0 ? (
+                  complaints.map(item => (
+                    <tr key={item._id}>
+                      <td>
+                        {item.complaintReply ? (
+                          <div className={style.replyBox}>
+                            <b>Authority Says:</b>
+                            <p>{item.complaintReply}</p>
+                          </div>
+                        ) : "Awaiting response"}
+                      </td>
+                      <td>{item.departmentId?.departmentName || "General"}</td>
+                      <td>
+                        <b>{item.complaintTitle}</b>
+                        <p className={style.contentSnippet}>{item.complaintContent}</p>
+                        {item.complaintPhoto && (
+                          <img src={`http://localhost:5000${item.complaintPhoto}`} alt="Evidence" className={style.evidenceThumb} />
+                        )}
+                      </td>
+                      <td>
+                        <span className={style.statusBadge} data-status={item.complaintStatus || "Submitted"}>
+                          {item.complaintStatus || "Submitted"}
+                        </span>
+                      </td>
+                      <td>
+                        <button className={style.supportBtn} onClick={() => handleSupport(item._id)}>
+                          👍 Upvote ({item.supportCount || 0})
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className={style.emptyState}>No complaints filed yet.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default Complaint;

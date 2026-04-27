@@ -1,0 +1,100 @@
+.navbar {
+  width: 100%;
+  height: 80px;
+  background: rgba(15, 15, 15, 0.8); /* Semi-transparent dark */
+  backdrop-filter: blur(15px); /* Glossy glassmorphism effect */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+}
+
+.navContainer {
+  width: 90%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo Styling */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 30px;
+  height: 30px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.logoText {
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.logoText span {
+  color: #ff7d3e; /* Signature Sassland Orange */
+}
+
+/* Nav Links */
+.navLinks {
+  display: flex;
+  gap: 40px;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+}
+
+.navLink:hover {
+  color: #ffffff;
+}
+
+.navLink.active {
+  color: #ff7d3e;
+}
+
+/* Underline indicator for active state */
+.navLink.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ff7d3e;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255, 125, 62, 0.5);
+}
+
+.navActions {
+  min-width: 50px; /* Keeps layout balanced */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navLinks {
+    gap: 20px;
+  }
+  
+  .logoText {
+    font-size: 1.1rem;
+  }
+}

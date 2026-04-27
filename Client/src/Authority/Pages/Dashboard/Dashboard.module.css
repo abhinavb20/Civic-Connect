@@ -1,0 +1,115 @@
+/* PAGE LAYOUT */
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  padding: 30px;
+  font-family: "Segoe UI", sans-serif;
+  color: #fff;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* HEADER */
+.header {
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: 25px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover Glow Effect */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+/* CARD CONTENT */
+.card h3 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #facc15; /* gold highlight */
+}
+
+.card p {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.card span {
+  font-size: 13px;
+  color: #cbd5f5;
+}
+
+/* COLOR VARIATIONS */
+.card:nth-child(1) h3 {
+  color: #38bdf8; /* blue */
+}
+
+.card:nth-child(2) h3 {
+  color: #a78bfa; /* purple */
+}
+
+.card:nth-child(3) h3 {
+  color: #fb7185; /* red */
+}
+
+.card:nth-child(4) h3 {
+  color: #4ade80; /* green */
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header h2 {
+    font-size: 22px;
+  }
+
+  .card h3 {
+    font-size: 28px;
+  }
+}

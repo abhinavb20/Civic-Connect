@@ -1,0 +1,301 @@
+:root {
+    --primary: #5C8374;
+    --primary-light: rgba(92, 131, 116, 0.08);
+    --accent: #93B1A6;
+    --bg-white: #FFFFFF;
+    --bg-cream: #F8FAF9;
+    --text-main: #040D12;
+    --error: #d64933;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.page {
+    min-height: 100vh;
+    background-color: var(--bg-white);
+    background-image:
+        radial-gradient(at 0% 0%, rgba(92, 131, 116, 0.03) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(147, 177, 166, 0.03) 0px, transparent 50%);
+    padding: 80px 40px;
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    margin-bottom: 70px;
+    text-align: center;
+}
+
+.badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    background: var(--bg-cream);
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(147, 177, 166, 0.2);
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 200;
+    letter-spacing: -2px;
+    margin: 20px 0 10px 0;
+    color: var(--primary);
+
+}
+
+.subtitle {
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+/* Form Card */
+.formCard {
+    background: var(--bg-cream);
+    padding: 50px;
+    border-radius: 32px;
+    border: 1px solid rgba(147, 177, 166, 0.2);
+    margin-bottom: 60px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.02);
+}
+
+.sectionTitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+.formRow {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    /* Better for error message alignment */
+}
+
+.field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    padding-left: 4px;
+}
+
+.input {
+    width: 100%;
+    padding: 18px 24px;
+    background: white;
+    border: 1px solid rgba(147, 177, 166, 0.2);
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: var(--transition);
+    color: black;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px rgba(92, 131, 116, 0.1);
+}
+
+.inputError {
+    border-color: var(--error) !important;
+}
+
+.error {
+    color: var(--error);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-left: 4px;
+}
+
+.actionGroup {
+    padding-top: 31px;
+    /* Align with input height + label */
+}
+
+.primaryBtn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 18px 45px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.primaryBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(92, 131, 116, 0.25);
+}
+
+/* Table Section */
+.tableCard {
+    margin-top: 50px;
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.countBadge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 8px 18px;
+    border-radius: 12px;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.districtTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+}
+
+.districtTable th {
+    padding: 15px 25px;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.districtTable tr td {
+    padding: 25px;
+    background: white;
+    border-top: 1px solid rgba(147, 177, 166, 0.1);
+    border-bottom: 1px solid rgba(147, 177, 166, 0.1);
+    transition: var(--transition);
+}
+
+.districtTable tr td:first-child {
+    border-left: 1px solid rgba(147, 177, 166, 0.1);
+    border-radius: 20px 0 0 20px;
+    color: var(--accent);
+    font-weight: 300;
+}
+
+.districtTable tr td:last-child {
+    border-right: 1px solid rgba(147, 177, 166, 0.1);
+    border-radius: 0 20px 20px 0;
+}
+
+.districtTable tr:hover td {
+    background: var(--bg-cream);
+    transform: translateY(-2px);
+    border-color: rgba(92, 131, 116, 0.2);
+}
+
+.distLabel {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.panchName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--primary);
+}
+
+.deleteBtn {
+    background: rgba(214, 73, 51, 0.05);
+    color: var(--error);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.deleteBtn:hover {
+    background: var(--error);
+    color: white;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 80px !important;
+    color: var(--accent);
+    background: var(--bg-cream) !important;
+    border-radius: 20px;
+    font-style: italic;
+}
+
+/* New Buttons */
+.updateBtn {
+    background: rgba(0, 102, 255, 0.1);
+    color: #4da3ff;
+    border: 1px solid rgba(0, 102, 255, 0.3);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.updateBtn:hover {
+    background: #0066ff;
+    color: #fff;
+}
+
+.cancelBtn {
+    background: transparent;
+    color: #717d96;
+    border: 1px solid #2d3648;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.cancelBtn:hover {
+    color: #fff;
+    border-color: #fff;
+}
+
+/* Row being edited */
+.activeRow {
+    background: rgba(0, 102, 255, 0.05) !important;
+    border-left: 3px solid #0066ff;
+}
+
+.actionGroup {
+    display: flex;
+    align-items: flex-end;
+}

@@ -1,0 +1,150 @@
+.page {
+  background-color: #050505; /* Deep black */
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: #f5f5f5; /* Ivory white */
+  font-family: 'Playfair Display', serif; /* Optional: Use a serif font for luxury */
+}
+
+.wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+  margin-bottom: 60px;
+  border-left: 2px solid #d4af37; /* Gold accent line */
+  padding-left: 25px;
+}
+
+.badge {
+  color: #d4af37;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.title span {
+  color: #d4af37;
+  font-style: italic;
+}
+
+.subtitle {
+  color: #a0a0a0;
+  font-size: 1rem;
+  margin-top: 10px;
+  max-width: 500px;
+}
+
+/* Stats Grid & Cards */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.statCard {
+  background: linear-gradient(145deg, #111111 0%, #0a0a0a 100%);
+  border: 1px solid #222222;
+  padding: 35px;
+  border-radius: 0px; /* Sharp edges feel more "luxury boutique" */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.statCard:hover {
+  border-color: #d4af37;
+  transform: translateY(-5px);
+  background: #141414;
+}
+
+.iconBox {
+  font-size: 2rem;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.05);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid rgba(212, 175, 55, 0.3);
+}
+
+.cardContent h4 {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 5px 0;
+}
+
+.statNumber {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+}
+
+/* Gold corner decoration */
+.cardDecoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(225deg, #d4af37 0%, transparent 50%);
+  opacity: 0.1;
+  transition: 0.3s;
+}
+
+.statCard:hover .cardDecoration {
+  opacity: 0.5;
+}
+
+/* Loading State */
+.loaderContainer {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.goldSpinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(212, 175, 55, 0.1);
+  border-top: 2px solid #d4af37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  .title {
+    font-size: 2rem;
+  }
+}

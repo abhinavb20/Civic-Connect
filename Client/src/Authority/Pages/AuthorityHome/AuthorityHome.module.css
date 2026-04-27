@@ -1,0 +1,70 @@
+/* AuthorityHome.module.css */
+:root {
+  --bg-deep: #0a0b10;          /* Deepest background */
+  --bg-sidebar: #0f111a;       /* Slightly lighter sidebar */
+  --bg-content: #12141c;       /* Main panel color */
+  --accent-blue: #3d5afe;
+  --text-main: #ffffff;
+  --text-muted: #8a8f9d;
+  --border-line: rgba(255, 255, 255, 0.08);
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.sidebarArea {
+  width: 280px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-line);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+}
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-deep);
+  /* We remove the outer padding to make it 'filled' */
+  height: 100%;
+}
+
+.navbarArea {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-line);
+  background-color: var(--bg-sidebar); /* Matches sidebar for a unified header */
+}
+
+.contentArea {
+  flex: 1;
+  background-color: var(--bg-content);
+  /* If you want the 'floating' look from the image, keep a small margin: */
+  margin: 15px; 
+  border-radius: 20px;
+  border: 1px solid var(--border-line);
+  padding: 30px;
+  overflow-y: auto;
+  
+  /* Adds that subtle depth seen in the image */
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styling */
+.contentArea::-webkit-scrollbar {
+  width: 5px;
+}
+.contentArea::-webkit-scrollbar-thumb {
+  background: #2a2e3f;
+  border-radius: 10px;
+}

@@ -1,0 +1,215 @@
+:root {
+  --primary: #5C8374;
+  --primary-dark: #1B4242;
+  --accent: #93B1A6;
+  --bg-subtle: #F8FAF9;
+  --white: #ffffff;
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  --border: rgba(147, 177, 166, 0.2);
+}
+
+.page {
+  min-height: 100vh;
+  background: var(--white);
+  background-image: radial-gradient(circle at 100% 0%, #f1f4f2 0%, transparent 25%);
+  padding: 80px 40px;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--primary-dark);
+}
+
+.wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+  margin-bottom: 60px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--bg-subtle);
+  color: var(--primary);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 400;
+  letter-spacing: -2px;
+  margin: 0 0 10px 0;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.subtitle {
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 300;
+  max-width: 700px;
+}
+
+/* Summary Stats */
+.summaryCard {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.summaryItem {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  min-width: 250px;
+}
+
+.summaryItem h4 {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.summaryItem span {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 10px;
+  color: var(--primary);
+}
+
+/* Table Design */
+.tableCard {
+  background: var(--white);
+  border-radius: 32px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.tableHeader {
+  padding: 35px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bg-subtle);
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  padding: 0 20px 20px 20px;
+}
+
+.complaintTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.complaintTable th {
+  padding: 15px 25px;
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+}
+
+.complaintTable td {
+  padding: 25px;
+  background: var(--bg-subtle);
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
+
+.complaintTable tr td:first-child { border-radius: 16px 0 0 16px; }
+.complaintTable tr td:last-child { border-radius: 0 16px 16px 0; }
+
+.complaintTable tr:hover td {
+  background: #f0f3f1;
+  transform: scale(1.002);
+}
+
+/* Content Styles */
+.userName { font-weight: 700; font-size: 1rem; }
+.locationInfo { font-size: 0.85rem; line-height: 1.5; }
+.locationInfo small { color: var(--accent); display: block; margin-top: 2px; }
+.complaintTitle { font-weight: 700; color: var(--primary-dark); margin-bottom: 5px; display: block;}
+.complaintContent { font-size: 0.85rem; color: #555; line-height: 1.6; max-width: 250px; }
+
+/* Images */
+.imageGallery { display: flex; gap: 8px; flex-wrap: wrap; }
+.complaintImg {
+  width: 60px; height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: zoom-in;
+  transition: 0.3s;
+  border: 2px solid transparent;
+}
+.complaintImg:hover { transform: scale(1.1); border-color: var(--primary); }
+
+/* Status Badges */
+.statusBadge {
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.statusBadge[data-status="Submitted"], 
+.statusBadge[data-status="Pending"] { background: #fff8e1; color: #b7860b; }
+.statusBadge[data-status="In Progress"] { background: #e3f2fd; color: #1976d2; }
+.statusBadge[data-status="Resolved"] { background: #e8f5e9; color: #2e7d32; }
+
+/* Loading State */
+.loadingCard {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+.statusDropdown {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s;
+}
+
+.statusDropdown:hover {
+  border-color: var(--primary);
+}

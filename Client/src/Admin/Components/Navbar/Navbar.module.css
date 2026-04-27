@@ -1,0 +1,83 @@
+/* Color Palette: #040D12, #183D3D, #5C8374, #93B1A6 */
+
+.navbar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent; /* Parent AdminHome handles background */
+  color: #93B1A6;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.iconWrapper {
+  color: #5C8374;
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.link span {
+  color: #5C8374;
+  font-weight: 300;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.adminBadge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5C8374;
+  border: 1px solid rgba(92, 131, 116, 0.3);
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: rgba(24, 61, 61, 0.5);
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid #5C8374;
+  color: #93B1A6;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.logoutBtn:hover {
+  background: #5C8374;
+  color: #040D12;
+}
+
+.logoutIcon {
+  font-size: 1.2rem !important;
+}
+
+/* Responsive adjustment */
+@media (max-width: 600px) {
+  .adminBadge {
+    display: none;
+  }
+}

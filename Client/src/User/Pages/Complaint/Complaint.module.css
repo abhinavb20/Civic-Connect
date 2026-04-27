@@ -1,0 +1,124 @@
+.page { color: #f5f3f3; padding: 20px; background-color: #000; }
+.wrapper { max-width: 1200px; margin: 0 auto; }
+
+/* Header Styling */
+.header { margin-bottom: 50px; }
+.badge { color: #d4af37; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 3px; font-weight: 700; }
+.title { font-size: 2.5rem; margin: 10px 0; font-weight: 700; }
+.title span { color: #d4af37; font-style: italic; }
+.subtitle { color: #888; max-width: 600px; }
+
+/* Luxury Form Card */
+.formCard {
+  background: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  padding: 40px;
+  margin-bottom: 50px;
+  box-shadow: 0 20px 40px rgb(0, 0, 0);
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  color: #d4af37;
+  border-bottom: 1px solid #222;
+  padding-bottom: 15px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.fullWidth { grid-column: span 2; }
+
+.field label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.input, .textarea {
+  width: 100%;
+  background: #151515;
+  border: 1px solid #222;
+  padding: 15px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: #d4af37;
+  background: #1a1a1a;
+}
+
+.fileLabel {
+  background: #1a1a1a;
+  border: 1px dashed #333;
+  padding: 15px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #d4af37 !important;
+  transition: 0.3s;
+}
+
+.fileLabel:hover { background: #222; border-color: #d4af37; }
+
+.primaryBtn {
+  background: #d4af37;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+.primaryBtn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+
+/* Table Styling */
+.tableCard { background: #0d0d0d; border: 1px solid #1a1a1a; padding: 30px; }
+.sectionTitle { color: #fff; margin-bottom: 25px; letter-spacing: 1px; }
+
+.table { width: 100%; border-collapse: collapse; }
+.table th { text-align: left; padding: 15px; color: #d4af37; font-size: 0.8rem; text-transform: uppercase; background: #111; }
+.table td { padding: 20px 15px; border-bottom: 1px solid #1a1a1a; }
+
+.tableIssue strong { display: block; color: #fff; font-size: 1rem; }
+.tableIssue span { color: #666; font-size: 0.8rem; }
+
+.statusBadge {
+  padding: 5px 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #222;
+  color: #888;
+}
+
+.resolved { background: rgba(212, 175, 55, 0.1); color: #d4af37; border: 1px solid #d4af37; }
+
+.voteBtn, .voted {
+  background: none; border: 1px solid #333; color: #666;
+  padding: 8px 15px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+}
+
+.voted { border-color: #d4af37; color: #d4af37; }
+
+.thumb { width: 40px; height: 40px; object-fit: cover; margin-top: 5px; border: 1px solid #333; }
+.placeholderText { color: #444; font-style: italic; }

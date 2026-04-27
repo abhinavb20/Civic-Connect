@@ -1,0 +1,246 @@
+.page {
+    padding: 20px;
+    background-color: transparent; /* Parent layout handles black background */
+}
+
+/* Header Section */
+.header {
+    margin-bottom: 40px;
+}
+
+.badge {
+    color: #d4af37;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 10px 0;
+}
+
+.title span {
+    color: #d4af37;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+/* Table Design */
+.tableWrapper {
+    background: #0f0f0f;
+    border: 1px solid #1a1a1a;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.thead th {
+    background: #151515;
+    color: #d4af37;
+    text-align: left;
+    padding: 20px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #000;
+}
+
+.tr {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background 0.3s ease;
+}
+
+.tr:hover {
+    background: rgba(212, 175, 55, 0.02);
+}
+
+.tr td {
+    padding: 25px 20px;
+    vertical-align: top;
+}
+
+/* Cell Specifics */
+.userCell .userName {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.userCell .wardLabel {
+    color: #666;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.contentCell {
+    max-width: 400px;
+    background-color: #000;
+}
+
+.complaintTitle {
+    color: #d4af37;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.complaintContent {
+    color: #aaa;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.deptTag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    border-radius: 4px;
+}
+
+.locationCell {
+    color: #f5f5f5;
+    font-weight: 500;
+}
+
+/* Action / Support Button */
+.actionCell {
+    width: 200px;
+}
+
+.supportBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d4af37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.activeBtn {
+    background: transparent;
+    color: #d4af37;
+}
+
+.activeBtn:hover {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.disabledBtn {
+    background: #d4af37;
+    color: #000;
+    opacity: 0.8;
+    cursor: default;
+}
+
+.voteCount {
+    text-align: center;
+}
+
+.countNumber {
+    display: block;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.countLabel {
+    font-size: 0.6rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Loading Spinner */
+.loadingWrapper {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #d4af37;
+}
+
+.goldSpinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(212, 175, 55, 0.1);
+    border-top: 3px solid #d4af37;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+.imageCell {
+    width: 120px;
+    padding: 12px;
+    text-align: center;
+}
+
+.complaintImg {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #262626;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.complaintImg:hover {
+    transform: scale(1.1);
+    border-color: #ff7d3e;
+}
+
+.noImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #4b5563;
+    gap: 4px;
+}
+
+.noImage svg {
+    font-size: 1.2rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .tableWrapper {
+        overflow-x: auto;
+    }
+}

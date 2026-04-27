@@ -1,0 +1,221 @@
+:root {
+    --primary: #5C8374;
+    --primary-light: rgba(92, 131, 116, 0.08);
+    --accent: #93B1A6;
+    --bg-white: #FFFFFF;
+    --bg-cream: #F8FAF9;
+    --text-main: #040D12;
+    --error: #d64933;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.page {
+    min-height: 100vh;
+    background-color: var(--bg-white);
+    background-image:
+        radial-gradient(at 0% 0%, rgba(92, 131, 116, 0.03) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(147, 177, 166, 0.05) 0px, transparent 50%);
+    padding: 60px 40px;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+}
+
+.wrapper {
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 50px;
+    text-align: left;
+}
+
+.badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 6px 16px;
+    border-radius: 4px;
+}
+
+.title {
+    font-size: 3.2rem;
+    font-weight: 200;
+    letter-spacing: -1.5px;
+    margin: 15px 0 5px 0;
+    color: var(--primary);
+}
+
+.subtitle {
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+/* Form Layout */
+.formCard {
+    background: var(--bg-cream);
+    padding: 45px;
+    border-radius: 28px;
+    border: 1px solid rgba(147, 177, 166, 0.15);
+    margin-bottom: 50px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.02);
+}
+
+.sectionTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.input {
+    width: 100%;
+    padding: 15px 20px;
+    background: white;
+    border: 1px solid rgba(147, 177, 166, 0.2);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px var(--primary-light);
+}
+
+.inputError {
+    border-color: var(--error) !important;
+}
+
+.error {
+    color: var(--error);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.actionGroup {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.primaryBtn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.primaryBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(92, 131, 116, 0.25);
+}
+
+/* Table Design */
+.tableCard {
+    background: white;
+    border-radius: 28px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 25px;
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.countBadge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 10px;
+}
+
+.districtTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.districtTable th {
+    padding: 20px;
+    text-align: left;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--bg-cream);
+}
+
+.districtTable td {
+    padding: 22px 20px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.districtName {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.contactInfo {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.deleteBtn {
+    color: var(--error);
+    background: transparent;
+    border: 1px solid rgba(214, 73, 51, 0.1);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.deleteBtn:hover {
+    background: var(--error);
+    color: white;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 60px !important;
+    color: var(--accent);
+}

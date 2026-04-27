@@ -1,0 +1,225 @@
+:root {
+  --primary: #5C8374;
+  --primary-light: #f4f7f6;
+  --accent: #93B1A6;
+  --text-dark: #040D12;
+  --white: #ffffff;
+  --shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--white);
+  background-image: linear-gradient(135deg, #fdfdfd 0%, #f4f7f6 100%);
+  padding: 80px 40px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+}
+
+.wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+  margin-bottom: 60px;
+}
+
+.badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--primary);
+  background: rgba(92, 131, 116, 0.1);
+  padding: 8px 16px;
+  border-radius: 50px;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 200;
+  letter-spacing: -2px;
+  margin: 20px 0 10px;
+  color: var(--primary);
+
+}
+
+.subtitle {
+  color: var(--accent);
+  font-weight: 300;
+  font-size: 1.1rem;
+}
+
+/* Summary Stats */
+.summaryCard {
+  margin-bottom: 50px;
+}
+
+.summaryItem {
+  display: inline-block;
+  background: var(--white);
+  padding: 30px 50px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(147, 177, 166, 0.2);
+}
+
+.summaryItem h4 {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+}
+
+.summaryItem span {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: block;
+  margin-top: 5px;
+}
+
+/* Table Card */
+.tableCard {
+  background: var(--white);
+  border-radius: 30px;
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.tableHeader {
+  padding: 25px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.countBadge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 8px 18px;
+  border-radius: 12px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.userTable th {
+  padding: 20px;
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.userTable td {
+  padding: 25px 20px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--primary-light);
+  vertical-align: middle;
+}
+
+/* Avatar Styling */
+.userPhoto {
+  width: 55px;
+  height: 55px;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  border: 2px solid var(--white);
+}
+
+.noPhoto {
+  width: 55px;
+  height: 55px;
+  border-radius: 18px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  border: 1px dashed var(--accent);
+}
+
+.userName {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.contactBox {
+  line-height: 1.6;
+}
+
+.emailText {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.phoneText {
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.address {
+  max-width: 250px;
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+.loadingCard {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.emptyState {
+  padding: 100px !important;
+  text-align: center;
+  color: var(--accent);
+  font-style: italic;
+}
+.deleteBtn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.deleteBtn:hover {
+  background: #d9363e;
+}

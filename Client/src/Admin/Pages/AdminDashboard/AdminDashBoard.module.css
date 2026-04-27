@@ -1,0 +1,203 @@
+:root {
+  /* Updated to light, luxurious palette */
+  --bg-dark: #FFFFFF;         /* Pure white for page background */
+  --bg-elevated: #F8FAF9;   /* Off-white for cards, headers, etc. */
+  --primary: #5C8374;        /* Dark teal for main accents */
+  --accent: #93B1A6;         /* Soft teal for secondary text and borders */
+  --white: #040D12;         /* Dark text (color from original dark bg) */
+  --glass: rgba(0, 0, 0, 0.03); /* Dark glass effect for hover */
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  /* Lighter radial gradient for subtle effect */
+  background-image: radial-gradient(circle at 0% 0%, rgba(92, 131, 116, 0.05) 0%, transparent 50%);
+  color: var(--white);
+  padding: 40px 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
+  /* More visible border for light background */
+  border-bottom: 1px solid rgba(147, 177, 166, 0.2);
+  padding-bottom: 30px;
+}
+
+.topBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary); /* Use primary for text visibility */
+  background: rgba(92, 131, 116, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(92, 131, 116, 0.2);
+}
+
+.mainTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -1px;
+  color: #040D12;
+}
+
+.mainTitle span {
+  color: var(--primary);
+  font-weight: 400;
+}
+
+.subText {
+  color: var(--accent); /* Original light teal for subtext is fine */
+  opacity: 0.8; /* Increased opacity for readability on white */
+  margin: 8px 0 0 0;
+}
+
+.refreshAction {
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent); /* Accent for border in idle state */
+  color: var(--primary); /* Primary for text in idle state */
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.refreshAction:hover {
+  background: var(--primary);
+  color: var(--bg-dark); /* White text on primary hover */
+  box-shadow: 0 5px 15px rgba(92, 131, 116, 0.2);
+}
+
+/* Grid & Cards */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.statCard {
+  background: var(--bg-elevated); /* Solid off-white background */
+  border: 1px solid rgba(147, 177, 166, 0.2); /* Soft border */
+  padding: 30px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow for elevation */
+}
+
+/* More prominent glow effect on light background */
+.statCard::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  background: var(--primary);
+  filter: blur(50px);
+  opacity: 0.15;
+}
+
+.iconBox {
+  width: 50px;
+  height: 50px;
+  background: var(--bg-dark); /* White for icon box background */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--primary); /* Primary color for main icons */
+  border: 1px solid rgba(147, 177, 166, 0.3);
+}
+
+.successIcon { color: #2D6A4F; } /* Darker green for success on white */
+.warningIcon { color: #A0522D; } /* Darker sienna for warning on white */
+
+.dataBox label {
+  display: block;
+  font-size: 0.85rem;
+  color: #040D12; /* Original light teal text */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.dataBox h3 {
+  font-size: 2.2rem; /* Slightly larger for emphasis */
+  margin: 0;
+  font-weight: 600;
+  color: var(--primary); /* Dark main number */
+}
+
+.fullWidthCard {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  border: 1px dashed var(--accent); /* Dotted border in accent color */
+}
+
+.fullWidthCard .iconBox {
+  background: rgba(147, 177, 166, 0.1); /* Light tint for full card icon box */
+}
+
+.statusTag {
+  font-size: 0.8rem;
+  background: rgba(160, 82, 45, 0.1); /* Light tint of darker sienna */
+  color: #A0522D; /* Darker sienna for text */
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-left: 15px;
+  vertical-align: middle;
+}
+
+/* Loader */
+.loaderContainer {
+  height: 100vh;
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary); /* Primary text for loader */
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(92, 131, 116, 0.2); /* Light primary */
+  border-top: 3px solid var(--primary); /* Solid primary top */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

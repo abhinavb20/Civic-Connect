@@ -1,0 +1,159 @@
+.sidebar {
+  width: 100%;
+  height: 100%;
+  background-color: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 0;
+  border-right: 1px solid #1a1a1a;
+  position: relative;
+}
+
+/* Brand Section */
+.brand {
+  padding: 0 30px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.logoIcon {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #d4af37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4af37;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  transform: rotate(45deg); /* Diamond shape for luxury feel */
+}
+
+.logoIcon > * {
+  transform: rotate(-45deg);
+}
+
+.brandName {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 15px 0 5px;
+  letter-spacing: 1px;
+}
+
+.brandName span {
+  color: #d4af37;
+}
+
+.panelBadge {
+  font-size: 0.65rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  border-top: 1px solid #222;
+  padding-top: 5px;
+}
+
+/* Menu Section */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 15px;
+}
+
+.link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #888;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.icon {
+  margin-right: 15px;
+  font-size: 1.1rem;
+  filter: grayscale(1);
+  transition: 0.3s;
+}
+
+.active {
+  color: #d4af37 !important;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, transparent 100%);
+  border-left: 2px solid #d4af37;
+}
+
+.active .icon {
+  filter: grayscale(0);
+}
+
+.activeIndicator {
+  position: absolute;
+  right: 0;
+  width: 0;
+  height: 100%;
+  background: #d4af37;
+  transition: 0.3s;
+}
+
+.active .activeIndicator {
+  width: 2px;
+  box-shadow: -5px 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* Footer Section */
+.footer {
+  margin-top: auto;
+  padding: 0 30px;
+}
+
+.statusIndicator {
+  font-size: 0.7rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #d4af37;
+}
+
+@media (max-width: 1024px) {
+  .brandName, .panelBadge, .label, .statusIndicator {
+    display: none;
+  }
+  .sidebar {
+    padding: 20px 0;
+  }
+  .link {
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .icon {
+    margin-right: 0;
+  }
+}
