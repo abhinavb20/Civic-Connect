@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./Dashboard.module.css";
 import { Link } from "react-router-dom";
-import mapImage from "../../Components/assets/Image.png";
+import mapImage from "../../../Guest/Components/assets/Image.png";
 const Dashboard = () => {
 
   const features = [
