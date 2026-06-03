@@ -1,3 +1,22 @@
+
+<div align="center">
+
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=42&pause=1000&color=FF4D6D&center=true&vCenter=true&repeat=true&width=900&lines=Civic+Connect" />
+
+### A Full-Stack Civic Complaint Management System
+
+Streamlining communication between citizens, authorities, and administrators — all in one platform.
+
+<br>
+
+<img src="https://img.shields.io/badge/LICENSE-MIT-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/NODE.JS-18.x-green?style=for-the-badge">
+<img src="https://img.shields.io/badge/REACT-18.x-61DAFB?style=for-the-badge">
+<img src="https://img.shields.io/badge/MONGODB-ATLAS-47A248?style=for-the-badge">
+<img src="https://img.shields.io/badge/EXPRESS.JS-4.x-black?style=for-the-badge">
+
+</div>
+
 # Civic Connect
 
 A Full-Stack Civic Complaint Management System
