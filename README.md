@@ -154,31 +154,29 @@ Capabilities:
 
 ## 📂 Project Structure
 
-CivicPro/
-│
-├── Client/
-│   ├── src/
-│   │   ├── Admin/
-│   │   ├── Authority/
-│   │   ├── Guest/
-│   │   ├── User/
-│   │   ├── Routes/
+```text
+CivicPro
+├── Client
+│   ├── public
+│   ├── src
+│   │   ├── Admin
+│   │   ├── Authority
+│   │   ├── Guest
+│   │   ├── User
+│   │   ├── Routes
 │   │   └── main.jsx
-│   │
-│   ├── public/
 │   └── package.json
 │
-├── Server/
-│   ├── Models/
-│   ├── Routes/
-│   ├── Controllers/
-│   ├── Middleware/
-│   ├── Uploads/
+├── Server
+│   ├── Controllers
+│   ├── Middleware
+│   ├── Models
+│   ├── Routes
+│   ├── Uploads
 │   └── package.json
 │
 └── README.md
-
----
+```
 
 ## 🚀 Getting Started
 
@@ -353,7 +351,7 @@ How to Contribute:
 
 2. Clone your fork
 
-git clone https://github.com/YOUR_USERNAME/CivicPro.git
+git clone https://github.com/abhinavb20/CivicPro.git
 
 3. Create a feature branch
 
