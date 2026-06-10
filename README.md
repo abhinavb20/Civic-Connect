@@ -129,83 +129,83 @@ MongoDB Database
 
 ### Landing Page
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture1.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture1.png" width="900"/>
 
 ### Registration Page
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture2.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture2.png" width="900"/>
 
 ### Login Page
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture3.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture3.png" width="900"/>
 
 ### User Dashboard
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture4.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture4.png" width="900"/>
 
 ### Raise Complaint
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture5.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture5.png" width="900"/>
 
 ### View Complaints
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture6.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture6.png" width="900"/>
 
 ### My Profile
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture7.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture7.png" width="900"/>
 
 ### Edit Profile
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture8.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture8.png" width="900"/>
 
 ### Change Password
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture9.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture9.png" width="900"/>
 
 ### Authority Dashboard
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture10.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture10.png" width="900"/>
 
 ### View Complaints
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture11.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture11.png" width="900"/>
 
 ### Admin Dashboard
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture12.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture12.png" width="900"/>
 
 ### Manage District
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture13.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture13.png" width="900"/>
 
 ### Manage Panchayath
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture14.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture14.png" width="900"/>
 
 ### Manage Ward
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture15.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture15.png" width="900"/>
 
 ### Manage Department
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture16.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture16.png" width="900"/>
 
 ### Manage Authorities
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture17.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture17.png" width="900"/>
 
 ### Manage Complaints
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture18.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture18.png" width="900"/>
 
 ### Manage Users
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture19.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture19.png" width="900"/>
 
 ### Report Page
 
-<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/Picture20.png" width="900"/>
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/Screenshots/Picture20.png" width="900"/>
 
 ---
 
