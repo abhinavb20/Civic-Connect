@@ -1,403 +1,315 @@
-
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=42&pause=1000&color=FF4D6D&center=true&vCenter=true&repeat=true&width=900&lines=Civic+Connect" />
-
-### A Full-Stack Civic Complaint Management System
-
-Streamlining communication between citizens, authorities, and administrators — all in one platform.
-
-<br>
-
-<img src="https://img.shields.io/badge/LICENSE-MIT-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/NODE.JS-18.x-green?style=for-the-badge">
-<img src="https://img.shields.io/badge/REACT-18.x-61DAFB?style=for-the-badge">
-<img src="https://img.shields.io/badge/MONGODB-ATLAS-47A248?style=for-the-badge">
-<img src="https://img.shields.io/badge/EXPRESS.JS-4.x-black?style=for-the-badge">
-
-</div>
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=42&pause=1000&color=FF6B35&center=true&vCenter=true&repeat=true&width=900&lines=Civic+Connect;Smart+Civic+Complaint+Management+System;MERN+Stack+Project" />
 
 # Civic Connect
 
-A Full-Stack Civic Complaint Management System
+### Transforming Civic Complaint Management Through Digital Governance
 
-Streamlining communication between citizens and local authorities through a centralized digital platform for reporting, tracking, and resolving civic issues. Built with the MERN Stack.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb)
 
----
-
-## 📌 Overview
-
-Civic Connect is a role-based web application that enables citizens to report public issues such as road damage, waste management problems, water supply disruptions, and electricity failures. The platform provides a transparent workflow where complaints are assigned, monitored, and resolved by authorized officials.
-
-The system organizes complaints using a hierarchical location structure:
-
-District → Panchayath → Ward
-
-This ensures accurate complaint routing, accountability, and efficient issue resolution.
+</div>
 
 ---
 
-## ✨ Features
+## Overview
 
-### 🔐 Authentication & Authorization
+Civic Connect is a full-stack civic complaint management platform that bridges the gap between citizens and government authorities.
 
-• Secure user authentication
-• Role-Based Access Control (RBAC)
-• Separate access for Citizens, Authorities, and Administrators
-• Protected routes and permission-based operations
-
-### 📢 Complaint Management
-
-• Submit complaints with descriptions and images
-• Categorize complaints by department
-• Location-based complaint routing
-• Complaint history tracking
-• Community complaint visibility
-
-### 🏛️ Administrative Management
-
-• Manage Districts
-• Manage Panchayaths
-• Manage Wards
-• Manage Departments
-• Manage Authorities
-• Monitor all complaints
-• Generate reports
-
-### 👮 Authority Dashboard
-
-• View assigned complaints
-• Analyze complaint details
-• Update complaint status
-• Reply to complaints
-• Monitor pending and resolved cases
-
-### 👤 Citizen Portal
-
-• Register and login
-• Maintain profile
-• Raise complaints
-• Track complaint progress
-• View community issues
-
-### 📁 File Upload Support
-
-• Upload complaint images
-• Evidence-based issue reporting
-• Secure file handling
-
-### 📊 Reporting & Analytics
-
-• Dashboard statistics
-• Complaint status tracking
-• Location-wise reports
-• Resolution monitoring
+Citizens can submit complaints with supporting images, track complaint progress, and receive updates. Authorities can manage assigned complaints while administrators maintain the complete location hierarchy and system operations.
 
 ---
 
-## 👥 User Roles
+## Features
 
-### 👤 Citizen
-Access Level: Standard
+### Citizen Portal
 
-Capabilities:
-• Register and login
-• Manage profile
-• Submit complaints with images
-• Track complaint status
-• View complaint history
+- User Registration & Login
+- Profile Management
+- Submit Complaints
+- Upload Supporting Images
+- Track Complaint Status
+- View Complaint History
 
-### 👮 Authority
-Access Level: Elevated
+### Authority Portal
 
-Capabilities:
-• View assigned complaints
-• Update complaint status
-• Reply to complaints
-• Manage issue resolution
+- Secure Login
+- View Assigned Complaints
+- Update Complaint Status
+- Reply to Complaints
+- Monitor Complaint Progress
 
-### 🛠️ Admin
-Access Level: Full Control
+### Admin Portal
 
-Capabilities:
-• Manage districts, panchayaths, and wards
-• Manage departments
-• Manage authorities
-• Monitor complaints
-• Generate reports
-• Maintain system hierarchy
+- Dashboard Analytics
+- Manage Districts
+- Manage Panchayaths
+- Manage Wards
+- Manage Departments
+- Manage Authorities
+- Manage Complaints
+- Manage Users
+- Generate Reports
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
-• React.js
-• React Router
-• Axios
-• Material UI
-• React Icons
-• GSAP
-• CSS Modules
+- React.js
+- HTML5
+- CSS3
+- JavaScript
 
 ### Backend
 
-• Node.js
-• Express.js
-• MongoDB
-• Mongoose
-• Multer
-• CORS
+- Node.js
+- Express.js
+
+### Database
+
+- MongoDB
+
+### Authentication
+
+- JWT
+- Role-Based Access Control
 
 ---
 
-## 📂 Project Structure
+## System Architecture
 
 ```text
-CivicPro
-├── Client
-│   ├── public
-│   ├── src
-│   │   ├── Admin
-│   │   ├── Authority
-│   │   ├── Guest
-│   │   ├── User
-│   │   ├── Routes
-│   │   └── main.jsx
-│   └── package.json
-│
-├── Server
-│   ├── Controllers
-│   ├── Middleware
-│   ├── Models
-│   ├── Routes
-│   ├── Uploads
-│   └── package.json
-│
-└── README.md
+Frontend (React.js)
+        │
+        ▼
+REST APIs
+        │
+        ▼
+Backend (Node.js + Express)
+        │
+        ▼
+MongoDB Database
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
+## Project Modules
 
-• Node.js (v18 or above)
-• MongoDB Atlas or Local MongoDB
-• npm
+### User Module
 
-### Clone the Repository
+- Registration
+- Login
+- Profile Management
+- Complaint Submission
+- Complaint Tracking
 
-git clone https://github.com/YOUR_USERNAME/CivicPro.git
+### Authority Module
 
-cd CivicPro
+- Complaint Review
+- Status Updates
+- Complaint Responses
 
-### Backend Setup
+### Admin Module
 
-cd Server
+- District Management
+- Panchayath Management
+- Ward Management
+- Department Management
+- Authority Management
+- Reports
 
-npm install
+---
 
-Create a .env file:
+## Screenshots
 
-PORT=5000
+### Landing Page
 
-MONGODB_URI=your_mongodb_connection_string
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture1.png" width="900"/>
 
-CLIENT_URL=http://localhost:5173
+### Registration Page
 
-Start Backend:
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture2.png" width="900"/>
 
-npm start
+### Login Page
 
-or
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture3.png" width="900"/>
 
-nodemon server.js
+### User Dashboard
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture4.png" width="900"/>
+
+### Raise Complaint
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture5.png" width="900"/>
+
+### View Complaints
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture6.png" width="900"/>
+
+### My Profile
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture7.png" width="900"/>
+
+### Edit Profile
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture8.png" width="900"/>
+
+### Change Password
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture9.png" width="900"/>
+
+### Authority Dashboard
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture10.png" width="900"/>
+
+### View Complaints
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture11.png" width="900"/>
+
+### Admin Dashboard
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture12.png" width="900"/>
+
+### Manage District
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture13.png" width="900"/>
+
+### Manage Panchayath
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture14.png" width="900"/>
+
+### Manage Ward
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture15.png" width="900"/>
+
+### Manage Department
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture16.png" width="900"/>
+
+### Manage Authorities
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture17.png" width="900"/>
+
+### Manage Complaints
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture18.png" width="900"/>
+
+### Manage Users
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture19.png" width="900"/>
+
+### Report Page
+
+<img src="https://raw.githubusercontent.com/abhinavb20/Civic-Connect/main/screenshots/picture20.png" width="900"/>
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/abhinavb20/Civic-Connect.git
+```
 
 ### Frontend Setup
 
-cd ../Client
-
+```bash
+cd client
 npm install
-
 npm run dev
+```
 
-Frontend URL:
-http://localhost:5173
+### Backend Setup
 
-Backend URL:
-http://localhost:5000
-
----
-
-## ▶️ Usage
-
-### Citizen Workflow
-
-Register Account
-      ↓
-Login
-      ↓
-Complete Profile
-      ↓
-Submit Complaint
-      ↓
-Upload Evidence
-      ↓
-Track Complaint Status
-      ↓
-Receive Resolution Updates
-
-### Authority Workflow
-
-Login
-      ↓
-View Assigned Complaints
-      ↓
-Analyze Complaint
-      ↓
-Update Status
-      ↓
-Reply to Citizen
-      ↓
-Resolve Issue
-
-### Admin Workflow
-
-Login
-      ↓
-Manage Locations
-      ↓
-Manage Departments
-      ↓
-Manage Authorities
-      ↓
-Monitor Complaints
-      ↓
-Generate Reports
-
----
-
-## 📜 Available Scripts
-
-Frontend
-
+```bash
+cd server
+npm install
 npm run dev
-Runs the Vite development server.
-
-npm run build
-Creates a production build.
-
-Backend
-
-npm start
-Starts the Express server.
-
-nodemon server.js
-Starts the server with auto-reload.
+```
 
 ---
 
-## 🗄️ Database Collections
+## Environment Variables
 
-• admins
-• users
-• authorities
-• districts
-• panchayaths
-• wards
-• departments
-• complaints
-• complaint_replies
-• complaint_supports
+Create:
+
+```env
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+PORT=5000
+```
 
 ---
 
-## 🔒 Security Features
+## Future Enhancements
 
-• Role-Based Access Control (RBAC)
-• Protected Routes
-• Input Validation
-• Secure File Upload Handling
-• Database Validation
-• Complaint Ownership Verification
-• Authentication & Authorization
-
----
-
-## 🛣️ Roadmap
-
-Future Enhancements:
-
-• Mobile Application Support
-• Geo-Tagging & Map Integration
-• Email Notifications
-• SMS Notifications
-• Real-Time Updates
-• AI-Based Complaint Prioritization
-• Advanced Analytics Dashboard
-• Cloud Deployment
-• Two-Factor Authentication (2FA)
-
----
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome.
-
-How to Contribute:
-
-1. Fork the repository
-
-2. Clone your fork
-
-git clone https://github.com/abhinavb20/CivicPro.git
-
-3. Create a feature branch
-
-git checkout -b feature/YourFeatureName
-
-4. Commit your changes
-
-git commit -m "feat: add YourFeatureName"
-
-5. Push to your branch
-
-git push origin feature/YourFeatureName
-
-6. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-You are free to use, modify, and distribute the project with proper attribution.
+- Mobile Application
+- Real-Time Notifications
+- Geo Location Tracking
+- AI-Based Complaint Prioritization
+- Advanced Analytics Dashboard
+- Automated Complaint Assignment
 
 ---
 
 ## 👨‍💻 Author
 
-Abhinav B
+<div align="center">
 
-Full Stack Developer
+# Abhinav B
+
+### Full Stack Developer | MERN Stack Enthusiast
+
+📍 Kochi, Kerala, India
+
+<a href="mailto:abhinavbahuleyan7@gmail.com">
+<img src="https://img.shields.io/badge/Email-abhinavbahuleyan7%40gmail.com-red?style=for-the-badge&logo=gmail&logoColor=white"/>
+</a>
+
+<a href="https://linkedin.com/in/abhinavbahuleyan7">
+<img src="https://img.shields.io/badge/LinkedIn-Abhinav%20B-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
+
+<a href="https://github.com/abhinavb20">
+<img src="https://img.shields.io/badge/GitHub-abhinavb20-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
+
+</div>
+
+### About Me
+
+Passionate Full Stack Developer with hands-on experience in designing and developing scalable web applications using the MERN Stack. Skilled in React.js, Node.js, Express.js, MongoDB, and modern web technologies. Interested in software engineering, backend development, cloud technologies, and building impactful digital solutions that solve real-world problems.
+
+### Contact
+
+- 📧 Email: **abhinavbahuleyan7@gmail.com**
+- 💼 LinkedIn: **https://linkedin.com/in/abhinavbahuleyan7**
+- 🐙 GitHub: **https://github.com/abhinavb20**
 
 ---
 
-## ⭐ Acknowledgements
+Also update the top section of your README to make it more recruiter-friendly:
 
-• React.js
-• Node.js
-• Express.js
-• MongoDB
-• Mongoose
-• Material UI
-• Axios
-• GSAP
+<div align="center">
 
----
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=42&pause=1000&color=FF6B35&center=true&vCenter=true&repeat=true&width=900&lines=Civic+Connect;Smart+Civic+Complaint+Management+System;Built+with+MERN+Stack" />
 
-If Civic Connect helped you, consider giving the repository a ⭐.
+# Civic Connect
 
-Transforming Communities Through Digital Governance.
+### 🚀 Transforming Civic Complaint Management Through Digital Governance
+
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/abhinavb20/Civic-Connect)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Abhinav%20B-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/abhinavbahuleyan7)
+
+![React](https://img.shields.io/badge/React.js-20232A?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb)
+
+</div>
