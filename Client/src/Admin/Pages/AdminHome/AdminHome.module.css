@@ -1,0 +1,107 @@
+/* Admin Color Palette:
+   - Deep Background: #040D12
+   - Surface/Sidebar: #183D3D
+   - Borders/Accents: #5C8374
+   - Secondary Text: #93B1A6
+   - Primary Text: #FFFFFF
+*/
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #040D12; /* Deepest Base */
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+/* Sidebar Area */
+.sidebarArea {
+  width: 260px;
+  height: 100vh;
+  background: #183D3D; /* Deep Forest Surface */
+  border-right: 1px solid rgba(92, 131, 116, 0.3); /* Subtle Sage Border */
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Main Container */
+.mainArea {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #040D12;
+}
+
+/* Navbar */
+.navbarArea {
+  height: 70px;
+  background: #183D3D;
+  border-bottom: 1px solid #5C8374;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  flex-shrink: 0;
+  z-index: 99;
+}
+
+/* Content Area */
+.contentArea {
+  flex-grow: 1;
+  width: 100%;
+  overflow-y: auto;
+  background-color: #040D12; 
+  /* Subtle linear gradient for a premium look */
+  background: linear-gradient(135deg, #040D12 0%, #06161d 100%);
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom Scrollbar for the Admin Command Center */
+.contentArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.contentArea::-webkit-scrollbar-track {
+  background: #040D12;
+}
+
+.contentArea::-webkit-scrollbar-thumb {
+  background: #183D3D;
+  border: 1px solid #5C8374;
+  border-radius: 4px;
+}
+
+.contentArea::-webkit-scrollbar-thumb:hover {
+  background: #5C8374;
+}
+
+/* Responsive Handling */
+@media (max-width: 1024px) {
+  .sidebarArea {
+    width: 80px; 
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  
+  .sidebarArea {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid #5C8374;
+  }
+
+  .mainArea {
+    height: auto;
+    min-height: 100vh;
+  }
+}

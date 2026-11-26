@@ -1,172 +1,259 @@
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 350px) minmax(0, 1fr);
-  gap: 22px;
-  align-items: start;
+:root {
+    --primary: #5C8374;
+    --primary-light: rgba(92, 131, 116, 0.08);
+    --accent: #93B1A6;
+    --bg-white: #FFFFFF;
+    --bg-cream: #F8FAF9;
+    --text-main: #040D12;
+    --error: #d64933;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+.page {
+    min-height: 100vh;
+    background-color: var(--bg-white);
+    /* Elegant ambient background */
+    background-image:
+        radial-gradient(at 0% 0%, rgba(92, 131, 116, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(147, 177, 166, 0.04) 0px, transparent 50%);
+    padding: 80px 40px;
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Luxury Header */
+.header {
+    margin-bottom: 80px;
+    border-left: 5px solid var(--primary);
+    padding-left: 35px;
+}
+
+.badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 200;
+    letter-spacing: -2px;
+    margin: 0;
+    color: var(--primary);
+
+}
+
+.subtitle {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-top: 10px;
+    font-weight: 300;
+}
+
+/* The Form Card */
 .formCard {
-  position: sticky;
-  top: calc(var(--topbar-h) + 18px);
-  overflow: hidden;
+    background: var(--bg-cream);
+    padding: 50px;
+    border-radius: 32px;
+    border: 1px solid rgba(147, 177, 166, 0.2);
+    margin-bottom: 60px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.02);
 }
 
-.headSub {
-  margin-top: 2px;
-  font-size: 12.5px;
-  color: var(--text-3);
+.sectionTitle {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--primary);
 }
 
-.headIcon {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  background: var(--teal-50);
-  color: var(--teal-600);
-  border: 1px solid var(--teal-100);
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    align-items: flex-start;
 }
 
-.headIcon svg {
-  width: 17px;
-  height: 17px;
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.formCard :global(.cc-card-body) {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding-top: 20px;
+.field label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
 }
 
-.formNote {
-  padding: 13px 18px;
-  border-top: 1px solid var(--border);
-  background: var(--surface-2);
-  font-size: 11.5px;
-  line-height: 1.6;
-  color: var(--text-3);
+.input {
+    width: 100%;
+    padding: 16px 22px;
+    background: white;
+    border: 1px solid rgba(147, 177, 166, 0.25);
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: var(--transition);
 }
 
-.spinner {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
-  animation: ccSpin 0.7s linear infinite;
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px var(--primary-light);
 }
 
-.tableCard {
-  overflow: hidden;
+.input:disabled {
+    background: #f2f4f3;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
-.tableHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--border);
+.inputError {
+    border-color: var(--error) !important;
 }
 
-.tableHead h3 {
-  font-size: 0.98rem;
-  letter-spacing: -0.015em;
+.error {
+    color: var(--error);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 4px;
 }
 
-.tableScroll {
-  width: 100%;
-  overflow-x: auto;
+.primaryBtn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-end;
+    /* Align with input row */
+    height: 56px;
 }
 
-:global(.cc-table).table {
-  min-width: 480px;
+.primaryBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(92, 131, 116, 0.2);
 }
 
-.table thead th:first-child,
-.table tbody td:first-child {
-  padding-left: 22px;
+/* The List Card */
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
 }
 
-.table tbody td:last-child {
-  padding-right: 22px;
+.countBadge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 8px 18px;
+    border-radius: 12px;
 }
 
-.index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 30px;
-  height: 26px;
-  padding: 0 8px;
-  border-radius: 7px;
-  background: var(--surface-3);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-3);
-  font-variant-numeric: tabular-nums;
+.districtTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
 }
 
-.nameCell {
-  display: flex;
-  align-items: center;
-  gap: 11px;
+.districtTable th {
+    padding: 15px 25px;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
 }
 
-.nameIcon {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  background: var(--teal-50);
-  color: var(--teal-600);
-  border: 1px solid var(--teal-100);
+.districtTable tr td {
+    padding: 24px 25px;
+    background: white;
+    border-top: 1px solid rgba(147, 177, 166, 0.1);
+    border-bottom: 1px solid rgba(147, 177, 166, 0.1);
+    transition: var(--transition);
 }
 
-.nameIcon svg {
-  width: 15px;
-  height: 15px;
+/* Floating effect for rows */
+.districtTable tr td:first-child {
+    border-left: 1px solid rgba(147, 177, 166, 0.1);
+    border-radius: 20px 0 0 20px;
 }
 
-.nameCell strong {
-  font-size: 13.5px;
-  font-weight: 650;
-  color: var(--text);
+.districtTable tr td:last-child {
+    border-right: 1px solid rgba(147, 177, 166, 0.1);
+    border-radius: 0 20px 20px 0;
 }
 
-@media (max-width: 1000px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .formCard {
-    position: static;
-  }
+.districtTable tr:hover td {
+    background: var(--bg-cream);
+    transform: scale(1.005);
+    border-color: var(--primary-light);
 }
 
-@media (max-width: 560px) {
-  .tableHead {
-    padding: 16px 18px;
-  }
+.wardNo {
+    background: var(--bg-cream);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+    /* Professional look for numbers */
+}
 
-  .tableHead :global(.cc-search) {
-    max-width: none;
-    flex-basis: 100%;
-  }
+.districtName {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
 
-  .table thead th:first-child,
-  .table tbody td:first-child {
-    padding-left: 18px;
-  }
+.deleteBtn {
+    background: rgba(214, 73, 51, 0.05);
+    color: var(--error);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-  .table tbody td:last-child {
-    padding-right: 18px;
-  }
+.deleteBtn:hover {
+    background: var(--error);
+    color: white;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 100px !important;
+    color: var(--accent);
+    font-style: italic;
+}
+
+@media (max-width: 1024px) {
+    .formGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .primaryBtn {
+        grid-column: span 2;
+        width: 100%;
+    }
 }

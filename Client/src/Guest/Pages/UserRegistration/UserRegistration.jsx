@@ -1,573 +1,265 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  FiArrowRight,
-  FiCamera,
-  FiCheckCircle,
-  FiEye,
-  FiEyeOff,
-  FiImage,
-  FiLock,
-  FiMail,
-  FiMapPin,
-  FiUser,
-  FiUserCheck,
-} from "react-icons/fi";
-import { api } from "../../../api";
-import AuthLayout from "../../../ui/AuthLayout";
-import { useToast } from "../../../ui/Toast";
-import styles from "./UserRegistration.module.css";
-
-const REGISTER_IMAGE =
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80";
-
-const emptyErrors = {
-  fullName: "",
-  email: "",
-  password: "",
-  contact: "",
-  address: "",
-  district: "",
-  panchayath: "",
-  ward: "",
-};
+import React, { useEffect, useState } from 'react';
+import style from './UserRegistration.module.css';
+import axios from 'axios';
+import { FiImage, FiUserCheck, FiMapPin, FiCamera } from 'react-icons/fi'; // Added icons for polish
 
 const UserRegistration = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [contact, setContact] = useState("");
-  const [address, setAddress] = useState("");
-  const [photo, setPhoto] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [contact, setContact] = useState('');
+  const [address, setAddress] = useState('');
+  const [photo, setPhoto] = useState(null); // Single file for profile
 
   const [districts, setDistricts] = useState([]);
   const [panchayaths, setPanchayaths] = useState([]);
   const [wards, setWards] = useState([]);
 
-  const [districtId, setDistrictId] = useState("");
-  const [panchayathId, setPanchayathId] = useState("");
-  const [wardId, setWardId] = useState("");
+  const [districtId, setDistrictId] = useState('');
+  const [panchayathId, setPanchayathId] = useState('');
+  const [wardId, setWardId] = useState('');
 
-  const [errors, setErrors] = useState(emptyErrors);
-  const [loadingLocations, setLoadingLocations] = useState(true);
-  const [locationError, setLocationError] = useState("");
-  const [loadingWards, setLoadingWards] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const fileInput = useRef(null);
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  const preview = useMemo(() => (photo ? URL.createObjectURL(photo) : ""), [photo]);
-
-  useEffect(
-    () => () => {
-      if (preview) URL.revokeObjectURL(preview);
-    },
-    [preview]
-  );
-
-  useEffect(() => {
-    let alive = true;
-    api
-      .get("/district")
-      .then((res) => {
-        if (alive) setDistricts(res.data?.districtData || []);
-      })
-      .catch(() => {
-        if (alive) setLocationError("We couldn't load the location list. Refresh to try again.");
-      })
-      .finally(() => {
-        if (alive) setLoadingLocations(false);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  const clearError = (field) =>
-    setErrors((prev) => (prev[field] ? { ...prev, [field]: "" } : prev));
-
-  const onDistrictChange = async (value) => {
-    setDistrictId(value);
-    setPanchayathId("");
-    setWardId("");
-    setPanchayaths([]);
-    setWards([]);
-    setErrors((prev) => ({ ...prev, district: "", panchayath: "", ward: "" }));
-    if (!value) return;
+  const fetchDistricts = async () => {
     try {
-      const res = await api.get(`/panchayathByDistrict/${value}`);
-      setPanchayaths(res.data?.panchayathData || []);
-    } catch {
-      setPanchayaths([]);
+      const res = await axios.get('http://localhost:5000/district');
+      setDistricts(res.data.districtData || []);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const onPanchayathChange = async (value) => {
-    setPanchayathId(value);
-    setWardId("");
-    setWards([]);
-    setErrors((prev) => ({ ...prev, panchayath: "", ward: "" }));
-    if (!value) return;
-    setLoadingWards(true);
+  const fetchPanchayaths = async (dId) => {
     try {
-      const res = await api.get(`/wardByPanchayath/${value}`);
-      setWards(res.data?.wardData || []);
-    } catch {
+      setDistrictId(dId);
+      setPanchayathId('');
+      setWardId('');
       setWards([]);
-    } finally {
-      setLoadingWards(false);
+      const res = await axios.get(`http://localhost:5000/panchayathByDistrict/${dId}`);
+      setPanchayaths(res.data.panchayathData || []);
+      setErrors((prev) => ({ ...prev, district: '', panchayath: '', ward: '' }));
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleSubmit = async (event) => {
-    event?.preventDefault();
-    if (submitting || success) return;
+  const fetchWards = async (pId) => {
+    try {
+      setPanchayathId(pId);
+      setWardId('');
+      const res = await axios.get(`http://localhost:5000/wardByPanchayath/${pId}`);
+      setWards(res.data.wardData || []);
+      setErrors((prev) => ({ ...prev, panchayath: '', ward: '' }));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    const nextErrors = { ...emptyErrors };
+  const handleSubmit = async () => {
+    let newErrors = {};
 
-    if (!fullName.trim()) nextErrors.fullName = "Enter your full name";
-    else if (fullName.trim().length < 2) nextErrors.fullName = "Enter at least 2 characters";
-
-    if (!email.trim()) nextErrors.email = "Enter your email address";
-    else if (!/^\S+@\S+\.\S+$/.test(email.trim()))
-      nextErrors.email = "Enter a valid email address";
-
-    if (!password.trim()) nextErrors.password = "Create a password";
-    else if (password.length < 6) nextErrors.password = "Use at least 6 characters";
-
-    if (!contact.trim()) nextErrors.contact = "Enter a contact number";
-    else if (!/^[0-9+\s-]{10,15}$/.test(contact.trim()))
-      nextErrors.contact = "Enter a valid contact number";
-
-    if (!address.trim()) nextErrors.address = "Enter your residential address";
-    if (!districtId) nextErrors.district = "Select your district";
-    if (!panchayathId) nextErrors.panchayath = "Select your panchayath";
-    if (!wardId) nextErrors.ward = "Select your ward";
-
-    setErrors(nextErrors);
-    const hasError = Object.values(nextErrors).some(Boolean);
-    if (hasError) {
-      const firstKey = Object.keys(nextErrors).find((key) => nextErrors[key]);
-      document.getElementById(`reg-${firstKey}`)?.focus();
-      return;
+    if (!fullName.trim()) newErrors.fullName = 'Enter your name';
+    if (!email.trim()) {
+      newErrors.email = 'Enter your email';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      newErrors.email = 'Enter valid email';
     }
 
-    setSubmitting(true);
-    setFormError("");
+    if (!password.trim()) {
+      newErrors.password = 'Enter password';
+    } else if (password.length < 6) {
+      newErrors.password = 'Minimum 6 characters';
+    }
+
+    if (!contact.trim()) newErrors.contact = 'Enter contact number';
+    if (!address.trim()) newErrors.address = 'Enter address';
+    if (!districtId) newErrors.district = 'Select district';
+    if (!panchayathId) newErrors.panchayath = 'Select panchayath';
+    if (!wardId) newErrors.ward = 'Select ward';
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
     const fd = new FormData();
-    fd.append("wardId", wardId);
-    fd.append("fullName", fullName.trim());
-    fd.append("contact", contact.trim());
-    fd.append("email", email.trim());
-    fd.append("password", password);
-    fd.append("address", address.trim());
-    if (photo) fd.append("photo", photo);
+    fd.append('wardId', wardId);
+    fd.append('fullName', fullName);
+    fd.append('contact', contact);
+    fd.append('email', email);
+    fd.append('password', password);
+    fd.append('address', address);
+    if (photo) fd.append('photo', photo);
 
     try {
-      await api.post("/userregistration", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await axios.post('http://localhost:5000/userregistration', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setSuccess(true);
-      toast.success("Account created", "You can now sign in with your new citizen account.");
+
+      alert('Citizen Registered Successfully');
+      window.location.reload(); 
     } catch (err) {
-      const message =
-        err.response?.data?.msg ||
-        "Registration failed. That email may already be in use — try signing in instead.";
-      setFormError(message);
-    } finally {
-      setSubmitting(false);
+      console.error(err);
+      alert('Registration failed');
     }
   };
 
-  if (success) {
-    return (
-      <AuthLayout
-        image={REGISTER_IMAGE}
-        imageAlt="Community members working together"
-        eyebrow="Citizen registration"
-        title="Your voice now has a direct line to your ward."
-        description="Report issues with photo evidence, follow official updates, and support the problems your community cares about most."
-        bullets={[
-          "Ward-mapped account for accurate routing",
-          "Photo evidence on every complaint",
-          "A permanent history of every report",
-        ]}
-      >
-        <div className={styles.successCard}>
-          <span className={styles.successIcon}>
-            <FiCheckCircle />
-          </span>
-          <h2 className={styles.title}>You&apos;re all set, {fullName.split(" ")[0]}.</h2>
-          <p className={styles.subtitle}>
-            Your citizen account has been created. Sign in to file your first report and
-            see updates from your local authority.
-          </p>
-          <div className={styles.successActions}>
-            <button
-              type="button"
-              className="cc-btn cc-btn--primary cc-btn--lg cc-btn--block"
-              onClick={() => navigate("/login")}
-            >
-              Continue to sign in <FiArrowRight />
-            </button>
-            <button
-              type="button"
-              className="cc-btn cc-btn--ghost cc-btn--block"
-              onClick={() => {
-                setSuccess(false);
-                setFormError("");
-                setFullName("");
-                setEmail("");
-                setPassword("");
-                setContact("");
-                setAddress("");
-                setPhoto(null);
-                setDistrictId("");
-                setPanchayathId("");
-                setWardId("");
-                setPanchayaths([]);
-                setWards([]);
-              }}
-            >
-              Register another account
-            </button>
-          </div>
-        </div>
-      </AuthLayout>
-    );
-  }
+  useEffect(() => {
+    fetchDistricts();
+  }, []);
 
   return (
-    <AuthLayout
-      wide
-      image={REGISTER_IMAGE}
-      imageAlt="Community members working together"
-      eyebrow="Citizen registration"
-      title="Your voice now has a direct line to your ward."
-      description="Report issues with photo evidence, follow official updates, and support the problems your community cares about most."
-      bullets={[
-        "Ward-mapped account for accurate routing",
-        "Photo evidence on every complaint",
-        "A permanent history of every report",
-      ]}
-    >
-      <div className={styles.head}>
-        <span className={styles.eyebrow}>Create an account</span>
-        <h2 className={styles.title}>Citizen registration</h2>
-        <p className={styles.subtitle}>
-          Already registered?{" "}
-          <Link to="/login" className={styles.inlineLink}>
-            Sign in instead
-          </Link>
-        </p>
-      </div>
-
-      {formError && (
-        <div className={styles.alert} role="alert">
-          {formError}
+    <div className={style.page}>
+      <div className={style.wrapper}>
+        <div className={style.header}>
+          <span className={style.badge}>Join the Community</span>
+          <h2 className={style.title}>Citizen Registration</h2>
+          <p className={style.subtitle}>
+            Connect with your local authorities and help improve your ward.
+          </p>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit} noValidate className={styles.form}>
-        <fieldset className="cc-fieldset">
-          <legend className="cc-fieldset-legend">
-            <FiUserCheck /> Personal details
-          </legend>
-
-          <div className="cc-form-grid">
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-fullName">
-                Full name
-              </label>
-              <div className="cc-input-wrap">
-                <FiUser />
+        <div className={style.formCard}>
+          <div className={style.section}>
+            <h3 className={style.sectionTitle}><FiUserCheck /> Personal Details</h3>
+            <div className={style.gridTwo}>
+              <div className={style.field}>
+                <label>Full Name</label>
                 <input
-                  id="reg-fullName"
-                  className={`cc-input ${errors.fullName ? "is-invalid" : ""}`}
-                  placeholder="Your full name"
+                  className={`${style.input} ${errors.fullName ? style.inputError : ''}`}
+                  placeholder="Name"
                   value={fullName}
-                  maxLength={40}
-                  autoComplete="name"
-                  onChange={(e) => {
-                    setFullName(e.target.value);
-                    clearError("fullName");
-                  }}
-                  aria-invalid={Boolean(errors.fullName)}
+                  maxLength={20}
+                  pattern='A-Z,a-z,0-9'
+                  onChange={(e) => setFullName(e.target.value)}
                 />
+                {errors.fullName && <span className={style.error}>{errors.fullName}</span>}
               </div>
-              {errors.fullName && <span className="cc-error">{errors.fullName}</span>}
-            </div>
-
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-contact">
-                Contact number
-              </label>
-              <input
-                id="reg-contact"
-                className={`cc-input ${errors.contact ? "is-invalid" : ""}`}
-                placeholder="+91 90000 00000"
-                inputMode="tel"
-                value={contact}
-                maxLength={15}
-                autoComplete="tel"
-                onChange={(e) => {
-                  setContact(e.target.value);
-                  clearError("contact");
-                }}
-                aria-invalid={Boolean(errors.contact)}
-              />
-              {errors.contact && <span className="cc-error">{errors.contact}</span>}
-            </div>
-
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-email">
-                Email address
-              </label>
-              <div className="cc-input-wrap">
-                <FiMail />
+              <div className={style.field}>
+                <label>Contact Number</label>
                 <input
-                  id="reg-email"
-                  className={`cc-input ${errors.email ? "is-invalid" : ""}`}
-                  type="email"
-                  inputMode="email"
+                  className={`${style.input} ${errors.contact ? style.inputError : ''}`}
+                  placeholder="+91 0000 000000"
+                  value={contact}
+                  minLength={10}
+                  maxLength={13}
+                  pattern='0-9,+'
+                  onChange={(e) => setContact(e.target.value)}
+                />
+                {errors.contact && <span className={style.error}>{errors.contact}</span>}
+              </div>
+            </div>
+
+            <div className={style.gridTwo}>
+              <div className={style.field}>
+                <label>Email Address</label>
+                <input
+                  className={`${style.input} ${errors.email ? style.inputError : ''}`}
                   placeholder="name@example.com"
                   value={email}
-                  maxLength={60}
-                  autoComplete="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    clearError("email");
-                  }}
-                  aria-invalid={Boolean(errors.email)}
+                  maxLength={40}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
+                {errors.email && <span className={style.error}>{errors.email}</span>}
               </div>
-              {errors.email && <span className="cc-error">{errors.email}</span>}
-            </div>
-
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-password">
-                Password
-              </label>
-              <div className="cc-input-wrap">
-                <FiLock />
+              <div className={style.field}>
+                <label>Password</label>
                 <input
-                  id="reg-password"
-                  className={`cc-input ${errors.password ? "is-invalid" : ""}`}
-                  type={showPassword ? "text" : "password"}
-                  placeholder="At least 6 characters"
+                  type="password"
+                  className={`${style.input} ${errors.password ? style.inputError : ''}`}
+                  placeholder="••••••••"
                   value={password}
-                  maxLength={30}
-                  autoComplete="new-password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    clearError("password");
-                  }}
-                  aria-invalid={Boolean(errors.password)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-                <button
-                  type="button"
-                  className="cc-input-action"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </button>
+                {errors.password && <span className={style.error}>{errors.password}</span>}
               </div>
-              {errors.password ? (
-                <span className="cc-error">{errors.password}</span>
-              ) : (
-                <span className="cc-hint">Use a mix of letters and numbers.</span>
-              )}
             </div>
 
-            <div className="cc-field cc-col-span-2">
-              <label className="cc-label" htmlFor="reg-address">
-                Residential address
-              </label>
+            <div className={style.field}>
+              <label>Residential Address</label>
               <textarea
-                id="reg-address"
-                className={`cc-textarea ${errors.address ? "is-invalid" : ""}`}
-                placeholder="House name, street, landmark, and post office"
+                className={`${style.textarea} ${errors.address ? style.inputError : ''}`}
+                placeholder="House name, Street, etc."
                 value={address}
-                rows={3}
-                maxLength={220}
-                autoComplete="street-address"
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                  clearError("address");
-                }}
-                aria-invalid={Boolean(errors.address)}
+                onChange={(e) => setAddress(e.target.value)}
               />
-              {errors.address && <span className="cc-error">{errors.address}</span>}
+              {errors.address && <span className={style.error}>{errors.address}</span>}
             </div>
           </div>
-        </fieldset>
 
-        <fieldset className="cc-fieldset">
-          <legend className="cc-fieldset-legend">
-            <FiMapPin /> Your location
-          </legend>
-          <p className={styles.sectionHint}>
-            Your ward decides which local authority receives your reports, so choose
-            carefully.
-          </p>
+          <div className={style.section}>
+            <h3 className={style.sectionTitle}><FiMapPin /> Location</h3>
+            <div className={style.gridThree}>
+              <div className={style.field}>
+                <label>District</label>
+                <select
+                  className={`${style.input} ${errors.district ? style.inputError : ''}`}
+                  value={districtId}
+                  onChange={(e) => fetchPanchayaths(e.target.value)}
+                >
+                  <option value="">Select</option>
+                  {districts.map((d) => (
+                    <option key={d._id} value={d._id}>{d.districtName}</option>
+                  ))}
+                </select>
+              </div>
 
-          {locationError && (
-            <div className={`cc-note cc-note--amber ${styles.locationNote}`}>
-              {locationError}
-            </div>
-          )}
+              <div className={style.field}>
+                <label>Panchayath</label>
+                <select
+                  className={`${style.input} ${errors.panchayath ? style.inputError : ''}`}
+                  value={panchayathId}
+                  onChange={(e) => fetchWards(e.target.value)}
+                  disabled={!districtId}
+                >
+                  <option value="">Select</option>
+                  {panchayaths.map((p) => (
+                    <option key={p._id} value={p._id}>{p.panchayathName}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="cc-form-grid cc-form-grid--3">
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-district">
-                District
-              </label>
-              <select
-                id="reg-district"
-                className={`cc-select ${errors.district ? "is-invalid" : ""}`}
-                value={districtId}
-                onChange={(e) => onDistrictChange(e.target.value)}
-                disabled={loadingLocations}
-                aria-invalid={Boolean(errors.district)}
-              >
-                <option value="">
-                  {loadingLocations ? "Loading districts…" : "Select district"}
-                </option>
-                {districts.map((d) => (
-                  <option key={d._id} value={d._id}>
-                    {d.districtName}
-                  </option>
-                ))}
-              </select>
-              {errors.district && <span className="cc-error">{errors.district}</span>}
-            </div>
-
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-panchayath">
-                Panchayath
-              </label>
-              <select
-                id="reg-panchayath"
-                className={`cc-select ${errors.panchayath ? "is-invalid" : ""}`}
-                value={panchayathId}
-                onChange={(e) => onPanchayathChange(e.target.value)}
-                disabled={!districtId}
-                aria-invalid={Boolean(errors.panchayath)}
-              >
-                <option value="">
-                  {districtId ? "Select panchayath" : "Select a district first"}
-                </option>
-                {panchayaths.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.panchayathName}
-                  </option>
-                ))}
-              </select>
-              {errors.panchayath && <span className="cc-error">{errors.panchayath}</span>}
-            </div>
-
-            <div className="cc-field">
-              <label className="cc-label" htmlFor="reg-ward">
-                Ward
-              </label>
-              <select
-                id="reg-ward"
-                className={`cc-select ${errors.ward ? "is-invalid" : ""}`}
-                value={wardId}
-                onChange={(e) => {
-                  setWardId(e.target.value);
-                  clearError("ward");
-                }}
-                disabled={!panchayathId || loadingWards}
-                aria-invalid={Boolean(errors.ward)}
-              >
-                <option value="">
-                  {!panchayathId
-                    ? "Select a panchayath first"
-                    : loadingWards
-                      ? "Loading wards…"
-                      : "Select ward"}
-                </option>
-                {wards.map((w) => (
-                  <option key={w._id} value={w._id}>
-                    {w.wardName}
-                    {w.wardNumber ? ` (Ward ${w.wardNumber})` : ""}
-                  </option>
-                ))}
-              </select>
-              {errors.ward && <span className="cc-error">{errors.ward}</span>}
+              <div className={style.field}>
+                <label>Ward</label>
+                <select
+                  className={`${style.input} ${errors.ward ? style.inputError : ''}`}
+                  value={wardId}
+                  onChange={(e) => setWardId(e.target.value)}
+                  disabled={!panchayathId}
+                >
+                  <option value="">Select</option>
+                  {wards.map((w) => (
+                    <option key={w._id} value={w._id}>{w.wardName} ({w.wardNumber})</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </fieldset>
 
-        <fieldset className="cc-fieldset">
-          <legend className="cc-fieldset-legend">
-            <FiCamera /> Profile photo <span className={styles.optional}>(optional)</span>
-          </legend>
+          <div className={style.section}>
+            <h3 className={style.sectionTitle}><FiCamera /> Identity</h3>
+            <div className={style.field}>
+              <label>Profile Photo</label>
+              <div className={style.fileUploadContainer}>
+                {/* NEW STYLED FILE UPLOAD */}
+                <label className={style.fileLabel}>
+                  <FiImage /> 
+                  {photo ? `${photo.name}` : "Upload ID Proof / Photo"}
+                  <input 
+                    type="file" 
+                    hidden 
+                    onChange={(e) => setPhoto(e.target.files[0])} 
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
 
-          <input
-            ref={fileInput}
-            type="file"
-            accept="image/*"
-            className="cc-sr-only"
-            id="reg-photo"
-            onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-          />
-
-          <label htmlFor="reg-photo" className="cc-file">
-            <span className="cc-file-icon">
-              {preview ? <img src={preview} alt="" className={styles.preview} /> : <FiImage />}
-            </span>
-            <span>
-              <strong>{photo ? photo.name : "Upload a profile photo"}</strong>
-              <span>{photo ? "Click to choose a different image" : "JPG or PNG, up to a few MB"}</span>
-            </span>
-          </label>
-          {photo && (
-            <button
-              type="button"
-              className={`cc-btn cc-btn--ghost cc-btn--sm ${styles.removePhoto}`}
-              onClick={() => {
-                setPhoto(null);
-                if (fileInput.current) fileInput.current.value = "";
-              }}
-            >
-              Remove photo
-            </button>
-          )}
-        </fieldset>
-
-        <div className={styles.submitRow}>
-          <button
-            type="submit"
-            className="cc-btn cc-btn--primary cc-btn--lg"
-            disabled={submitting}
-          >
-            {submitting ? (
-              <>
-                <span className={styles.spinner} aria-hidden="true" />
-                Creating account…
-              </>
-            ) : (
-              <>
-                Create citizen account <FiArrowRight />
-              </>
-            )}
+          <button type="button" className={style.submitBtn} onClick={handleSubmit}>
+            Create Citizen Account
           </button>
-          <p className={styles.legal}>
-            By creating an account you agree to use Civic Connect responsibly and provide
-            accurate information.
-          </p>
         </div>
-      </form>
-    </AuthLayout>
+      </div>
+    </div>
   );
 };
 

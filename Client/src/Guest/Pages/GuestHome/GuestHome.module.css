@@ -1,0 +1,472 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    font-family: 'DM Sans', sans-serif;
+    background: #f6faf6;
+    min-height: 100vh;
+    color: #1a2e1a;
+}
+
+/* ── HERO ── */
+.hero {
+    padding: 5rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.heroBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+    margin-bottom: 1.25rem;
+}
+
+.heroBadgeDot {
+    width: 6px;
+    height: 6px;
+    background: #16a34a;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.heroTitle {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #1a2e1a;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.25rem;
+}
+
+.heroTitle em {
+    font-style: italic;
+    color: #16a34a;
+}
+
+.heroDesc {
+    font-size: 16px;
+    font-weight: 300;
+    color: #4a5a4a;
+    line-height: 1.75;
+    max-width: 420px;
+    margin-bottom: 2rem;
+}
+
+.heroActions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btnPrimary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #1a2e1a;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.btnPrimary:hover {
+    background: #2d4a2d;
+    transform: translateY(-1px);
+}
+
+.btnOutline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    color: #1a2e1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #c8d8c8;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btnOutline:hover {
+    background: #f0f5f0;
+    border-color: #1a2e1a;
+}
+
+/* Hero right — stat cards */
+.heroStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.statCard {
+    background: #fff;
+    border: 1px solid #e8f0e8;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.statCard:first-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: #1a2e1a;
+    color: #fff;
+}
+
+.statCardIcon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.statValue {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #1a2e1a;
+    line-height: 1;
+}
+
+.statCard:first-child .statValue {
+    color: #fff;
+}
+
+.statLabel {
+    font-size: 12px;
+    color: #6a7a6a;
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+.statCard:first-child .statLabel {
+    color: rgba(255,255,255,0.65);
+}
+
+/* ── SECTION SHARED ── */
+.section {
+    padding: 4rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #1a2e1a;
+}
+
+.sectionLink {
+    font-size: 13px;
+    color: #16a34a;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sectionLink:hover {
+    text-decoration: underline;
+}
+
+/* ── STATIONS ── */
+.stationList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stationRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid #e8f0e8;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+}
+
+.stationRow:hover {
+    border-color: #86efac;
+    transform: translateX(3px);
+}
+
+.stationLeft {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.statusDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.statusDot.available { background: #16a34a; box-shadow: 0 0 0 3px #dcfce7; }
+.statusDot.busy      { background: #d97706; box-shadow: 0 0 0 3px #fef3c7; }
+.statusDot.offline   { background: #9ca3af; box-shadow: 0 0 0 3px #f3f4f6; }
+
+.stationName {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a2e1a;
+}
+
+.stationMeta {
+    font-size: 12px;
+    color: #6a7a6a;
+    margin-top: 2px;
+}
+
+.stationRight {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.statusTag {
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 999px;
+    letter-spacing: 0.2px;
+}
+
+.statusTag.available { background: #dcfce7; color: #166534; }
+.statusTag.busy      { background: #fef3c7; color: #92400e; }
+.statusTag.offline   { background: #f3f4f6; color: #6b7280; }
+
+.stationPrice {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a2e1a;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* ── PARTS ── */
+.partsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+}
+
+.partCard {
+    background: #fff;
+    border: 1px solid #e8f0e8;
+    border-radius: 16px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.12s;
+}
+
+.partCard:hover {
+    border-color: #86efac;
+    transform: translateY(-3px);
+}
+
+.partThumb {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f6faf6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.partThumb svg {
+    width: 36px;
+    height: 36px;
+}
+
+.partName {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a2e1a;
+    margin-bottom: 4px;
+}
+
+.partPrice {
+    font-size: 15px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.partCompat {
+    font-size: 11px;
+    color: #8a9a8a;
+    margin-top: 3px;
+}
+
+/* ── REGISTER SECTION ── */
+.registerSection {
+    background: #1a2e1a;
+    padding: 4rem 2rem;
+}
+
+.registerInner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.registerTitle {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: #fff;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.registerSubtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.registerGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.registerCard {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, transform 0.12s;
+    display: block;
+}
+
+.registerCard:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-3px);
+}
+
+.registerCardIcon {
+    width: 52px;
+    height: 52px;
+    background: rgba(74, 222, 128, 0.15);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.registerCardIcon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.registerCardTitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.registerCardDesc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+}
+
+/* ── FOOTER ── */
+.footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e8f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #8a9a8a;
+    background: #fff;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.footerLinks {
+    display: flex;
+    gap: 20px;
+}
+
+.footerLink {
+    color: #8a9a8a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.footerLink:hover { color: #1a2e1a; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 3rem 1.25rem 2.5rem;
+    }
+    .heroTitle { font-size: 36px; }
+    .heroStats { grid-template-columns: 1fr; }
+    .statCard:first-child { grid-column: auto; }
+    .section { padding: 2.5rem 1.25rem; }
+}

@@ -1,219 +1,122 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FiAlertCircle,
-  FiCalendar,
-  FiEdit3,
-  FiLock,
-  FiMail,
-  FiMapPin,
-  FiPhone,
-  FiUser,
-} from "react-icons/fi";
-import { api, fileUrl } from "../../../api";
-import Avatar from "../../../ui/Avatar";
-import PageHeader from "../../../ui/PageHeader";
-import PageLoader from "../../../ui/PageLoader";
-import styles from "./MyProfile.module.css";
+import axios from "axios";
+import { FiEdit3, FiLock, FiUser, FiMapPin, FiMail, FiPhone } from "react-icons/fi";
+import style from "./MyProfile.module.css";
 
 const MyProfile = () => {
-  const uid = sessionStorage.getItem("userId");
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(Boolean(uid));
-  const [error, setError] = useState("");
 
   useEffect(() => {
+    const uid = sessionStorage.getItem("userId");
     if (!uid) return;
-    api
-      .get("/users")
-      .then((res) => {
-        const users = res.data?.users || [];
-        setProfile(users.find((u) => u._id === uid) || null);
-      })
-      .catch(() => setError("We couldn't load your profile. Please refresh the page."))
-      .finally(() => setLoading(false));
-  }, [uid]);
 
-  if (loading) {
-    return (
-      <div className="cc-page">
-        <PageLoader label="Loading your profile" rows={2} />
-      </div>
-    );
-  }
+    axios
+      .get(`http://localhost:5000/users`)
+      .then((res) => {
+        const users = res.data.users || [];
+        const me = users.find(u => u._id === uid);
+        setProfile(me);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   if (!profile) {
     return (
-      <div className="cc-page">
-        <div className="cc-card">
-          <div className="cc-empty">
-            <div className="cc-empty-art">
-              <FiAlertCircle />
-            </div>
-            <h3>Profile unavailable</h3>
-            <p>{error || "We couldn't find your citizen record."}</p>
-          </div>
-        </div>
+      <div className={style.loadingWrapper}>
+        <div className={style.goldSpinner}></div>
+        <p>Authenticating Citizen Profile...</p>
       </div>
     );
   }
 
-  const ward = profile.wardId;
-  const panchayath = ward?.panchayathId;
-  const district = panchayath?.districtId;
-
-  const facts = [
-    { icon: FiMail, label: "Email address", value: profile.userEmail || "Not provided" },
-    { icon: FiPhone, label: "Contact number", value: profile.userContact || "Not provided" },
-    {
-      icon: FiMapPin,
-      label: "District",
-      value: district?.districtName || "Not assigned",
-    },
-    {
-      icon: FiMapPin,
-      label: "Panchayath",
-      value: panchayath?.panchayathName || "Not assigned",
-    },
-    {
-      icon: FiMapPin,
-      label: "Ward",
-      value: ward?.wardName
-        ? `${ward.wardName}${ward.wardNumber ? ` · ${ward.wardNumber}` : ""}`
-        : "Not assigned",
-    },
-    {
-      icon: FiCalendar,
-      label: "Member since",
-      value: profile.createdAt
-        ? new Date(profile.createdAt).toLocaleDateString(undefined, {
-            month: "long",
-            year: "numeric",
-          })
-        : "—",
-    },
-  ];
-
   return (
-    <div className="cc-page">
-      <PageHeader
-        eyebrow="My profile"
-        title="Your citizen identity."
-        description="The details your ward authority uses to verify and respond to your reports."
-        actions={
-          <>
-            <Link to="/user/editprofile" className="cc-btn cc-btn--secondary">
-              <FiEdit3 /> Edit details
-            </Link>
-            <Link to="/user/changepassword" className="cc-btn cc-btn--primary">
-              <FiLock /> Security settings
-            </Link>
-          </>
-        }
-      />
+    <div className={style.page}>
+      <div className={style.wrapper}>
+        <div className={style.header}>
+          <span className={style.badge}>Credential Overview</span>
+          <h2 className={style.title}>Citizen <span>Profile</span></h2>
+          <p className={style.subtitle}>
+            Verified residency and contact details within the Civic Connect ecosystem.
+          </p>
+        </div>
 
-      <div className={styles.layout}>
-        <aside className={`cc-card ${styles.identityCard}`}>
-          <div className={styles.cover} aria-hidden="true" />
-          <div className={styles.identityBody}>
-            <Avatar
-              src={profile.userPhoto ? fileUrl(profile.userPhoto) : ""}
-              name={profile.userName}
-              size="lg"
-              className={styles.avatar}
-            />
-            <h2 className={styles.name}>{profile.userName}</h2>
-            <span className={styles.tag}>
-              <FiUser /> Verified citizen
-            </span>
-            <p className={styles.identityMeta}>
-              {ward?.wardName ? `${ward.wardName} · ${panchayath?.panchayathName || ""}` : "Ward not assigned"}
-            </p>
-
-            <div className={styles.identityStats}>
-              <div>
-                <strong>{district?.districtName || "—"}</strong>
-                <span>District</span>
-              </div>
-              <div>
-                <strong>{panchayath?.panchayathName || "—"}</strong>
-                <span>Panchayath</span>
-              </div>
+        <div className={style.profileCard}>
+          <div className={style.sidebarSide}>
+            <div className={style.photoContainer}>
+              {profile.userPhoto ? (
+                <img
+                  src={`http://localhost:5000${profile.userPhoto}`}
+                  alt="user"
+                  className={style.profilePhoto}
+                />
+              ) : (
+                <div className={style.noPhoto}><FiUser size={40} /></div>
+              )}
             </div>
-          </div>
-        </aside>
-
-        <div className="cc-stack">
-          <section className="cc-card">
-            <div className="cc-card-head">
-              <div>
-                <h3>Personal &amp; contact</h3>
-                <p className={styles.headSub}>Used for official communication.</p>
-              </div>
-            </div>
-            <div className={styles.factGrid}>
-              {facts.slice(0, 2).map((f) => {
-                const Icon = f.icon;
-                return (
-                  <div key={f.label} className={styles.fact}>
-                    <span className={styles.factIcon}>
-                      <Icon />
-                    </span>
-                    <div>
-                      <span className={styles.factLabel}>{f.label}</span>
-                      <strong>{f.value}</strong>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className={styles.addressRow}>
-              <span className={styles.factIcon}>
-                <FiMapPin />
-              </span>
-              <div>
-                <span className={styles.factLabel}>Residential address</span>
-                <strong>{profile.userAddress || "Not provided"}</strong>
-              </div>
-            </div>
-          </section>
-
-          <section className="cc-card">
-            <div className="cc-card-head">
-              <div>
-                <h3>Jurisdiction</h3>
-                <p className={styles.headSub}>
-                  Your reports are routed using these boundaries.
-                </p>
-              </div>
-              <Link to="/user/editprofile" className="cc-link">
-                Request change
+            <h3 className={style.userName}>{profile.userName}</h3>
+            <span className={style.userTypeTag}>Verified Citizen</span>
+            
+            <div className={style.quickActions}>
+              <Link to="/user/editprofile" className={style.actionLink}>
+                <FiEdit3 /> Edit Details
+              </Link>
+              <Link to="/user/changepassword" className={`${style.actionLink} ${style.outline}`}>
+                <FiLock /> Security
               </Link>
             </div>
-            <div className={styles.factGrid}>
-              {facts.slice(2).map((f) => {
-                const Icon = f.icon;
-                return (
-                  <div key={f.label} className={styles.fact}>
-                    <span className={styles.factIcon}>
-                      <Icon />
-                    </span>
-                    <div>
-                      <span className={styles.factLabel}>{f.label}</span>
-                      <strong>{f.value}</strong>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+          </div>
 
-          <div className="cc-note">
-            <FiAlertCircle />
-            <span>
-              Need to change your ward? Ward changes affect where your reports are routed,
-              so contact your panchayath office to update your registered address.
-            </span>
+          <div className={style.infoSide}>
+            <h4 className={style.sectionLabel}>Personal & Contact</h4>
+            <div className={style.infoGrid}>
+              <div className={style.infoItem}>
+                <FiMail className={style.icon} />
+                <div>
+                  <label>Electronic Mail</label>
+                  <p>{profile.userEmail}</p>
+                </div>
+              </div>
+              <div className={style.infoItem}>
+                <FiPhone className={style.icon} />
+                <div>
+                  <label>Direct Contact</label>
+                  <p>{profile.userContact}</p>
+                </div>
+              </div>
+            </div>
+
+            <h4 className={style.sectionLabel}>Jurisdiction Details</h4>
+            <div className={style.infoGrid}>
+              <div className={style.infoItem}>
+                <FiMapPin className={style.icon} />
+                <div>
+                  <label>District / Region</label>
+                  <p>{profile.wardId?.panchayathId?.districtId?.districtName || "N/A"}</p>
+                </div>
+              </div>
+              <div className={style.infoItem}>
+                <FiMapPin className={style.icon} />
+                <div>
+                  <label>Local Body (Panchayath)</label>
+                  <p>{profile.wardId?.panchayathId?.panchayathName || "N/A"}</p>
+                </div>
+              </div>
+              <div className={style.infoItem}>
+                <FiMapPin className={style.icon} />
+                <div>
+                  <label>Assigned Ward</label>
+                  <p>{profile.wardId?.wardName} (No. {profile.wardId?.wardNumber})</p>
+                </div>
+              </div>
+              <div className={style.infoItem}>
+                <FiMapPin className={style.icon} />
+                <div>
+                  <label>Residential Address</label>
+                  <p className={style.addressText}>{profile.userAddress}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
