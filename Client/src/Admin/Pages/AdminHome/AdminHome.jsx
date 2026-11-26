@@ -1,27 +1,11 @@
-import React from 'react';
-import AdminRoutes from '../../../Routes/AdminRoutes';
-import Sidebar from '../../Components/Sidebar/Sidebar';
-import Navbar from '../../Components/Navbar/Navbar';
-import style from './AdminHome.module.css';
+import React from "react";
+import AdminRoutes from "../../../Routes/AdminRoutes";
+import AppShell from "../../../ui/AppShell";
 
-const AdminHome = () => {
-  return (
-    <div className={style.layout}>
-      <aside className={style.sidebarArea}>
-        <Sidebar />
-      </aside>
-
-      <main className={style.mainArea}>
-        <header className={style.navbarArea}>
-          <Navbar />
-        </header>
-
-        <section className={style.contentArea}>
-          <AdminRoutes />
-        </section>
-      </main>
-    </div>
-  );
-};
+const AdminHome = () => (
+  <AppShell role="admin">
+    <AdminRoutes />
+  </AppShell>
+);
 
 export default AdminHome;

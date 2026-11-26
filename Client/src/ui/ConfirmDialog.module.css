@@ -1,0 +1,28 @@
+.icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.danger {
+  background: var(--rose-50);
+  color: var(--rose-600);
+}
+
+.message {
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+  max-width: 42ch;
+}

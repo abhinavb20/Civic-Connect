@@ -1,0 +1,65 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  user-select: none;
+}
+
+.mark {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px -10px rgba(31, 94, 255, 0.75);
+}
+
+.mark svg {
+  display: block;
+}
+
+.text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+
+.textAccent {
+  color: var(--brand-600);
+  font-weight: 600;
+}
+
+.light .text {
+  color: #fff;
+}
+
+.light .textAccent {
+  color: #8fb8ff;
+}
+
+.md .mark svg {
+  width: 34px;
+  height: 34px;
+}
+
+.sm .mark svg {
+  width: 28px;
+  height: 28px;
+}
+
+.sm .text {
+  font-size: 15.5px;
+}
+
+.lg .mark svg {
+  width: 42px;
+  height: 42px;
+}
+
+.lg .text {
+  font-size: 22px;
+}

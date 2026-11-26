@@ -1,166 +1,174 @@
-.page {
-  padding: 40px;
-  background-color: transparent;
-  min-height: 100vh;
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
 }
 
-.wrapper {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* Header */
-.badge { color: #d4af37; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 3px; font-weight: 700; }
-.title { font-size: 2.5rem; margin: 10px 0; font-weight: 700; color: #fff; }
-.title span { color: #d4af37; font-style: italic; }
-.subtitle { color: #888; font-size: 0.95rem; margin-bottom: 40px; }
-
-/* The Main Card */
-.profileCard {
-  display: flex;
-  background: #111;
-  border: 1px solid #1a1a1a;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+.identityCard {
   overflow: hidden;
 }
 
-/* Left Sidebar in Card */
-.sidebarSide {
-  width: 300px;
-  background: #0d0d0d;
-  padding: 40px 30px;
+.cover {
+  height: 96px;
+  background:
+    radial-gradient(90% 150% at 10% 0%, rgba(31, 94, 255, 0.4), transparent 60%),
+    linear-gradient(135deg, #0b1428 0%, #12203c 100%);
+}
+
+.identityBody {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-right: 1px solid #1a1a1a;
-}
-
-.photoContainer {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: 2px solid #d4af37;
-  padding: 5px;
-  margin-bottom: 20px;
-}
-
-.profilePhoto {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.noPhoto {
-  width: 100%;
-  height: 100%;
-  background: #1a1a1a;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #333;
-}
-
-.userName { color: #fff; font-size: 1.4rem; margin-bottom: 5px; }
-.userTypeTag {
-  color: #d4af37;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  background: rgba(212, 175, 55, 0.1);
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 30px;
-}
-
-.quickActions { width: 100%; display: flex; flex-direction: column; gap: 12px; }
-
-.actionLink {
-  text-decoration: none;
-  background: #d4af37;
-  color: #000;
-  padding: 12px;
   text-align: center;
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  display: flex;
+  padding: 0 24px 24px;
+}
+
+.avatar {
+  margin-top: -42px;
+  border: 4px solid var(--surface);
+  box-shadow: 0 12px 26px -14px rgba(13, 23, 48, 0.5);
+}
+
+.name {
+  margin-top: 12px;
+  font-size: 19px;
+  letter-spacing: -0.028em;
+}
+
+.tag {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: 0.3s;
+  gap: 5px;
+  margin-top: 7px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--green-50);
+  border: 1px solid #c8eedd;
+  color: var(--green-600);
+  font-size: 10.5px;
+  font-weight: 700;
 }
 
-.actionLink.outline {
-  background: transparent;
-  color: #d4af37;
-  border: 1px solid #d4af37;
+.tag svg {
+  width: 11px;
+  height: 11px;
 }
 
-.actionLink:hover { transform: translateY(-2px); filter: brightness(1.1); }
-
-/* Right Info Section */
-.infoSide {
-  flex-grow: 1;
-  padding: 40px;
+.identityMeta {
+  margin-top: 9px;
+  font-size: 12px;
+  color: var(--text-3);
 }
 
-.sectionLabel {
-  color: #d4af37;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #1a1a1a;
-  padding-bottom: 10px;
-}
-
-.infoGrid {
+.identityStats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 1px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: var(--border);
 }
 
-.infoItem { display: flex; gap: 15px; align-items: flex-start; }
-.icon { color: #444; margin-top: 5px; }
+.identityStats > div {
+  padding: 12px 10px;
+  background: var(--surface-2);
+}
 
-.infoItem label {
+.identityStats strong {
   display: block;
-  font-size: 0.65rem;
-  color: #555;
-  text-transform: uppercase;
-  margin-bottom: 5px;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.infoItem p { color: #fff; font-size: 1rem; font-weight: 500; }
-.addressText { line-height: 1.5; }
+.identityStats span {
+  display: block;
+  margin-top: 1px;
+  font-size: 10.5px;
+  color: var(--text-3);
+}
 
-/* Loading States */
-.loadingWrapper {
-  height: 60vh;
+.headSub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px 24px;
+}
+
+.fact {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #d4af37;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
 }
 
-.goldSpinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(212, 175, 55, 0.1);
-  border-top: 3px solid #d4af37;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
+.factIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--brand-50);
+  color: var(--brand-600);
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+.factIcon svg {
+  width: 15px;
+  height: 15px;
+}
 
-@media (max-width: 850px) {
-  .profileCard { flex-direction: column; }
-  .sidebarSide { width: 100%; border-right: none; border-bottom: 1px solid #1a1a1a; }
-  .infoGrid { grid-template-columns: 1fr; }
+.factLabel {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.fact strong {
+  display: block;
+  margin-top: 1px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.addressRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 0 24px 22px;
+  padding: 14px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 940px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .factGrid {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .addressRow {
+    margin: 0 18px 18px;
+  }
 }

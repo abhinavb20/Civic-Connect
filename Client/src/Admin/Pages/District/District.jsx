@@ -1,165 +1,315 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import style from './District.module.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiAlertCircle,
+  FiEdit3,
+  FiMapPin,
+  FiPlus,
+  FiSearch,
+  FiTrash2,
+  FiX,
+} from "react-icons/fi";
+import { api } from "../../../api";
+import EmptyState from "../../../ui/EmptyState";
+import PageHeader from "../../../ui/PageHeader";
+import PageLoader from "../../../ui/PageLoader";
+import { useConfirm } from "../../../ui/ConfirmDialog";
+import { useToast } from "../../../ui/Toast";
+import styles from "./District.module.css";
+
+const titleCase = (value = "") =>
+  value.charAt(0).toUpperCase() + value.slice(1);
 
 const District = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [districts, setDistricts] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editName, setEditName] = useState('');
-  const [error, setError] = useState('');
+  const [editName, setEditName] = useState("");
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const loadDistricts = async () => {
+  const toast = useToast();
+  const confirm = useConfirm();
+
+  const loadDistricts = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/district');
-      setDistricts(res.data.districtData || []);
-    } catch (err) {
-      console.error("Fetch Error:", err);
+      const res = await api.get("/district");
+      setDistricts(res.data?.districtData || []);
+    } catch {
+      toast.error("Couldn't load districts", "Please refresh the page and try again.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const handleSave = async () => {
-    const currentValue = editId ? editName : value;
+  useEffect(() => {
+    loadDistricts();
+  }, [loadDistricts]);
 
-    if (!currentValue.trim()) {
-      setError('Please provide a district name');
-      return;
-    }
-
-    try {
-      if (editId) {
-        await axios.put(`http://localhost:5000/district/${editId}`, {
-          districtName: editName,
-        });
-        cancelEdit();
-      } else {
-        await axios.post('http://localhost:5000/district', {
-          districtName: value,
-        });
-        setValue('');
-      }
-      setError('');
-      loadDistricts();
-    } catch (err) {
-      console.error("Save Error:", err);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('This action cannot be undone. Delete district?')) return;
-    try {
-      await axios.delete(`http://localhost:5000/district/${id}`);
-      loadDistricts();
-    } catch (err) {
-      console.error("Delete Error:", err);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    let input = e.target.value;
-    input = input.charAt(0).toUpperCase() + input.slice(1);
-    editId ? setEditName(input) : setValue(input);
-    setError('');
+  const resetForm = () => {
+    setEditId(null);
+    setEditName("");
+    setValue("");
+    setError("");
   };
 
   const startEdit = (item) => {
     setEditId(item._id);
     setEditName(item.districtName);
-    setError('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setValue("");
+    setError("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const cancelEdit = () => {
-    setEditId(null);
-    setEditName('');
-    setError('');
+  const handleSave = async (event) => {
+    event?.preventDefault();
+    if (saving) return;
+
+    const name = (editId ? editName : value).trim();
+    if (!name) {
+      setError("Enter a district name to continue.");
+      return;
+    }
+    if (name.length < 2) {
+      setError("Use at least 2 characters.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      if (editId) {
+        await api.put(`/district/${editId}`, { districtName: name });
+        toast.success("District updated", `${name} has been renamed.`);
+      } else {
+        await api.post("/district", { districtName: name });
+        toast.success("District added", `${name} is now part of the hierarchy.`);
+      }
+      resetForm();
+      await loadDistricts();
+    } catch {
+      toast.error(
+        editId ? "Couldn't update district" : "Couldn't add district",
+        "Please check your connection and try again."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
-  useEffect(() => {
-    loadDistricts();
-  }, []);
+  const handleDelete = async (item) => {
+    const ok = await confirm({
+      title: `Delete ${item.districtName}?`,
+      message:
+        "This removes the district from the location hierarchy. Panchayaths registered under it are not deleted automatically and may become unassigned.",
+      confirmLabel: "Delete district",
+    });
+    if (!ok) return;
+
+    setDeletingId(item._id);
+    try {
+      await api.delete(`/district/${item._id}`);
+      setDistricts((prev) => prev.filter((d) => d._id !== item._id));
+      toast.success("District deleted", `${item.districtName} has been removed.`);
+    } catch {
+      toast.error("Couldn't delete district", "Please try again in a moment.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return districts;
+    return districts.filter((d) => d.districtName?.toLowerCase().includes(q));
+  }, [districts, query]);
 
   return (
-    <div className={style.page}>
-      <div className={style.wrapper}>
-        <header className={style.header}>
-          <span className={style.badge}>Administrative Oversight</span>
-          <h2 className={style.title}>District Management</h2>
-          <p className={style.subtitle}>Refining jurisdictional boundaries with precision.</p>
-        </header>
+    <div className="cc-page">
+      <PageHeader
+        eyebrow="Location hierarchy"
+        title="Districts"
+        description="The top level of your civic structure. Every panchayath, ward, and complaint ultimately routes through a district."
+        meta={<span className="cc-badge cc-badge--brand">{districts.length} districts</span>}
+      />
 
-        <section className={style.formCard}>
-          <h3 className={style.sectionTitle}>
-            {editId ? 'Update Record' : 'Add New Entry'}
-          </h3>
-          <div className={style.formRow}>
-            <div className={style.field}>
-              <label>District Nomenclature</label>
-              <input
-                type="text"
-                className={`${style.input} ${error ? style.inputError : ''}`}
-                placeholder="e.g. Manhattan"
-                value={editId ? editName : value}
-                onChange={handleInputChange}
-              />
-              {error && <span className={style.error}>{error}</span>}
+      <div className={styles.layout}>
+        <section className={`cc-card ${styles.formCard}`}>
+          <div className="cc-card-head">
+            <div>
+              <h3>{editId ? "Rename district" : "Add a district"}</h3>
+              <p className={styles.headSub}>
+                {editId
+                  ? "Update the official district name."
+                  : "Start by creating the district your panchayaths belong to."}
+              </p>
             </div>
-            <div className={style.actionGroup}>
-              <button className={style.primaryBtn} onClick={handleSave}>
-                {editId ? 'Update' : 'Save Record'}
+            {editId && (
+              <button
+                type="button"
+                className="cc-icon-btn"
+                onClick={resetForm}
+                aria-label="Cancel editing"
+              >
+                <FiX />
               </button>
+            )}
+          </div>
+
+          <form className="cc-card-body" onSubmit={handleSave} noValidate>
+            <div className="cc-field">
+              <label className="cc-label" htmlFor="district-name">
+                <span>
+                  <FiMapPin /> District name
+                </span>
+              </label>
+              <div className="cc-input-wrap">
+                <FiMapPin />
+                <input
+                  id="district-name"
+                  className={`cc-input ${error ? "is-invalid" : ""}`}
+                  placeholder="e.g. Ernakulam"
+                  maxLength={60}
+                  value={editId ? editName : value}
+                  onChange={(e) => {
+                    const next = titleCase(e.target.value);
+                    if (editId) setEditName(next);
+                    else setValue(next);
+                    setError("");
+                  }}
+                />
+              </div>
+              {error ? (
+                <span className="cc-error">
+                  <FiAlertCircle /> {error}
+                </span>
+              ) : (
+                <span className="cc-hint">Use the official revenue district name.</span>
+              )}
+            </div>
+
+            <div className={styles.formActions}>
               {editId && (
-                <button className={style.secondaryBtn} onClick={cancelEdit} style={{marginLeft: '10px'}}>
+                <button type="button" className="cc-btn cc-btn--ghost" onClick={resetForm}>
                   Cancel
                 </button>
               )}
+              <button type="submit" className="cc-btn cc-btn--primary" disabled={saving}>
+                {saving ? (
+                  <>
+                    <span className={styles.spinner} aria-hidden="true" />
+                    Saving…
+                  </>
+                ) : (
+                  <>
+                    <FiPlus /> {editId ? "Save changes" : "Add district"}
+                  </>
+                )}
+              </button>
             </div>
+          </form>
+
+          <div className={styles.formNote}>
+            Deleting a district never deletes its complaints. Reassign panchayaths first to keep
+            reporting routes intact.
           </div>
         </section>
 
-        <section className={style.tableCard}>
-          <div className={style.tableHeader}>
-            <h3 className={style.sectionTitle}>Active Jurisdictions</h3>
-            <span className={style.countBadge}>{districts.length} Units</span>
+        <section className={`cc-card ${styles.tableCard}`}>
+          <div className={styles.tableHead}>
+            <div>
+              <h3>District directory</h3>
+              <p className={styles.headSub}>
+                {query
+                  ? `${filtered.length} of ${districts.length} shown`
+                  : `${districts.length} active ${districts.length === 1 ? "district" : "districts"}`}
+              </p>
+            </div>
+            <div className="cc-search">
+              <FiSearch />
+              <input
+                type="search"
+                placeholder="Search districts"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                aria-label="Search districts"
+              />
+            </div>
           </div>
 
-          <div className={style.tableWrapper}>
-            <table className={style.districtTable}>
-              <thead>
-                <tr>
-                  <th style={{width: '80px'}}>No.</th>
-                  <th>District Name</th>
-                  <th style={{textAlign: 'right'}}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {districts.length > 0 ? (
-                  districts.map((d, index) => (
-                    <tr key={d._id}>
-                      <td>{(index + 1).toString().padStart(2, '0')}</td>
-                      <td className={style.districtName}>{d.districtName}</td>
+          {loading ? (
+            <PageLoader label="Loading districts" rows={2} />
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              icon={FiMapPin}
+              title={districts.length === 0 ? "No districts yet" : "No matching districts"}
+              description={
+                districts.length === 0
+                  ? "Add your first district to start building the location hierarchy."
+                  : "Try a different search term."
+              }
+              action={
+                districts.length > 0 ? (
+                  <button
+                    type="button"
+                    className="cc-btn cc-btn--secondary"
+                    onClick={() => setQuery("")}
+                  >
+                    Clear search
+                  </button>
+                ) : null
+              }
+            />
+          ) : (
+            <div className={styles.tableScroll}>
+              <table className={`cc-table ${styles.table}`}>
+                <thead>
+                  <tr>
+                    <th style={{ width: 64 }}>No.</th>
+                    <th>District</th>
+                    <th className="cc-td-actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((d, index) => (
+                    <tr key={d._id} className={editId === d._id ? styles.activeRow : ""}>
                       <td>
-                        <div className={style.tableActions}>
-                          <button className={style.editBtn} onClick={() => startEdit(d)}>
-                            Edit
-                          </button>
-                          <button className={style.deleteBtn} onClick={() => handleDelete(d._id)}>
-                            Delete
-                          </button>
+                        <span className={styles.index}>
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.nameCell}>
+                          <span className={styles.nameIcon}>
+                            <FiMapPin />
+                          </span>
+                          <strong>{d.districtName}</strong>
                         </div>
                       </td>
+                      <td className="cc-td-actions">
+                        <button
+                          type="button"
+                          className="cc-btn cc-btn--sm cc-btn--secondary"
+                          onClick={() => startEdit(d)}
+                        >
+                          <FiEdit3 /> Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="cc-btn cc-btn--sm cc-btn--danger"
+                          onClick={() => handleDelete(d)}
+                          disabled={deletingId === d._id}
+                        >
+                          <FiTrash2 /> {deletingId === d._id ? "Deleting…" : "Delete"}
+                        </button>
+                      </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className={style.emptyState}>
-                      No records found in the current directory.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </div>
     </div>

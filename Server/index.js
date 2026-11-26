@@ -5,8 +5,23 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 const fs = require("fs");
+
+const hashPassword = (password) => bcrypt.hash(password, 10);
+const verifyPassword = async (password, document, field) => {
+  const storedPassword = document[field];
+  if (/^\$2[aby]\$\d{2}\$/.test(storedPassword)) {
+    return bcrypt.compare(password, storedPassword);
+  }
+
+  if (storedPassword !== password) return false;
+
+  document[field] = await hashPassword(password);
+  await document.save();
+  return true;
+};
 
 // -------------------- App Setup --------------------
 const app = express();
@@ -52,7 +67,7 @@ const adminSchema = new mongoose.Schema(
   {
     adminName: { type: String, required: true, trim: true },
     adminEmail: { type: String, required: true, trim: true },
-    adminPassword: { type: String, required: true, trim: true },
+    adminPassword: { type: String, required: true, trim: true, select: false },
   },
   { collection: "admins", timestamps: true },
 );
@@ -108,7 +123,7 @@ const authoritySchema = new mongoose.Schema(
   {
     authorityName: { type: String, required: true, trim: true },
     authorityEmail: { type: String, required: true, trim: true },
-    authorityPassword: { type: String, required: true, trim: true },
+    authorityPassword: { type: String, required: true, trim: true, select: false },
     authorityContact: { type: String, required: true, trim: true },
     panchayathId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -126,7 +141,7 @@ const userSchema = new mongoose.Schema(
     userName: { type: String, required: true, trim: true },
     userEmail: { type: String, required: true, trim: true },
     userContact: { type: String, required: true, trim: true },
-    userPassword: { type: String, required: true, trim: true },
+    userPassword: { type: String, required: true, trim: true, select: false },
     userAddress: { type: String, required: true, trim: true },
     userPhoto: { type: String, default: "" },
     wardId: {
@@ -233,13 +248,18 @@ app.get("/greetings", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({ msg: "Email and password are required" });
+    }
 
     // Check Admin
-    const admin = await Admin.findOne({
-      adminEmail: email,
-      adminPassword: password,
-    });
-    if (admin) {
+    const admin = await Admin.findOne({ adminEmail: email }).select(
+      "+adminPassword",
+    );
+    if (
+      admin &&
+      await verifyPassword(password, admin, "adminPassword")
+    ) {
       return res.json({
         role: "admin",
         id: admin._id,
@@ -249,11 +269,10 @@ app.post("/login", async (req, res) => {
     }
 
     // Check User
-    const user = await User.findOne({
-      userEmail: email,
-      userPassword: password,
-    });
-    if (user) {
+    const user = await User.findOne({ userEmail: email }).select(
+      "+userPassword",
+    );
+    if (user && await verifyPassword(password, user, "userPassword")) {
       return res.json({
         role: "user",
         id: user._id,
@@ -266,9 +285,11 @@ app.post("/login", async (req, res) => {
     // Check Authority
     const authority = await Authority.findOne({
       authorityEmail: email,
-      authorityPassword: password,
-    });
-    if (authority) {
+    }).select("+authorityPassword");
+    if (
+      authority &&
+      await verifyPassword(password, authority, "authorityPassword")
+    ) {
       return res.json({
         role: "authority",
         id: authority._id,
@@ -289,7 +310,7 @@ app.post("/admin", async (req, res) => {
     await Admin.create({
       adminName: name,
       adminEmail: email,
-      adminPassword: password,
+      adminPassword: await hashPassword(password),
     });
     res.json({ msg: "Admin Created" });
   } catch (err) {
@@ -486,7 +507,7 @@ app.post("/authority", async (req, res) => {
     await Authority.create({
       authorityName: name,
       authorityEmail: email,
-      authorityPassword: password,
+      authorityPassword: await hashPassword(password),
       authorityContact: contact,
       panchayathId,
     });
@@ -523,19 +544,19 @@ app.put("/userPassword/:id", async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select("+userPassword");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // check old password
-    if (user.userPassword !== oldPassword) {
+    if (!(await verifyPassword(oldPassword, user, "userPassword"))) {
       return res.status(400).json({ message: "Old password is incorrect" });
     }
 
     // update password
-    user.userPassword = newPassword;
+    user.userPassword = await hashPassword(newPassword);
     await user.save();
 
     res.json({ message: "Password updated successfully" });
@@ -553,7 +574,7 @@ app.post("/userregistration", upload.single("photo"), async (req, res) => {
     await User.create({
       userName: fullName,
       userEmail: email,
-      userPassword: password,
+      userPassword: await hashPassword(password),
       userContact: contact,
       userAddress: address,
       userPhoto: photo,
@@ -602,7 +623,7 @@ app.put("/user/:id", upload.single("photo"), async (req, res) => {
 
     // update password only if provided
     if (password && password.trim() !== "") {
-      updateData.userPassword = password;
+      updateData.userPassword = await hashPassword(password);
     }
 
     // update photo if uploaded

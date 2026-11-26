@@ -1,150 +1,271 @@
-.page {
-  background-color: #050505; /* Deep black */
-  min-height: 100vh;
-  padding: 40px 20px;
-  color: #f5f5f5; /* Ivory white */
-  font-family: 'Playfair Display', serif; /* Optional: Use a serif font for luxury */
+.spin {
+  animation: ccSpin 0.8s linear infinite;
 }
 
-.wrapper {
-  max-width: 1100px;
-  margin: 0 auto;
+.errorNote {
+  margin-bottom: 20px;
 }
 
-/* Header Section */
-.header {
-  margin-bottom: 60px;
-  border-left: 2px solid #d4af37; /* Gold accent line */
-  padding-left: 25px;
+.headSub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--text-3);
 }
 
-.badge {
-  color: #d4af37;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 4px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 10px;
+/* Recent reports */
+.recentList {
+  padding: 6px 0;
 }
 
-.title {
-  font-size: 2.8rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
+.recentItem {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 24px;
+  border-bottom: 1px solid #f1f4fa;
+  transition: background-color 0.15s var(--ease);
 }
 
-.title span {
-  color: #d4af37;
-  font-style: italic;
+.recentItem:last-child {
+  border-bottom: 0;
 }
 
-.subtitle {
-  color: #a0a0a0;
-  font-size: 1rem;
-  margin-top: 10px;
-  max-width: 500px;
+.recentItem:hover {
+  background: #f9fbff;
 }
 
-/* Stats Grid & Cards */
-.statsGrid {
+.recentThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.recentIcon {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--surface-3);
+  color: var(--text-3);
 }
 
-.statCard {
-  background: linear-gradient(145deg, #111111 0%, #0a0a0a 100%);
-  border: 1px solid #222222;
-  padding: 35px;
-  border-radius: 0px; /* Sharp edges feel more "luxury boutique" */
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
+.recentIcon svg {
+  width: 18px;
+  height: 18px;
 }
 
-.statCard:hover {
-  border-color: #d4af37;
-  transform: translateY(-5px);
-  background: #141414;
+.recentBody {
+  flex: 1;
+  min-width: 0;
 }
 
-.iconBox {
-  font-size: 2rem;
-  color: #d4af37;
-  background: rgba(212, 175, 55, 0.05);
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0.5px solid rgba(212, 175, 55, 0.3);
-}
-
-.cardContent h4 {
-  font-size: 0.85rem;
-  color: #a0a0a0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0 0 5px 0;
-}
-
-.statNumber {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #ffffff;
+.recentBody strong {
   display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Gold corner decoration */
-.cardDecoration {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(225deg, #d4af37 0%, transparent 50%);
-  opacity: 0.1;
-  transition: 0.3s;
+.recentMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-3);
 }
 
-.statCard:hover .cardDecoration {
-  opacity: 0.5;
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #c3cbdb;
 }
 
-/* Loading State */
-.loaderContainer {
-  height: 60vh;
+/* Profile card */
+.profileCard {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+  gap: 18px;
 }
 
-.goldSpinner {
+.profileTop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profileName {
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.profileRole {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 11.5px;
+  color: var(--green-600);
+  font-weight: 600;
+}
+
+.profileFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.profileFacts > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.profileFacts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.profileFacts dt svg {
+  width: 13px;
+  height: 13px;
+}
+
+.profileFacts dd {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.profileActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Breakdown */
+.cardTitle {
+  font-size: 0.98rem;
+  margin-bottom: 14px;
+}
+
+.breakdownEmpty {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.breakdownTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.breakdownCount {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quick actions */
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.quickCard {
+  display: block;
+  padding: 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.quickCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #d6e1f7;
+  color: inherit;
+}
+
+.quickIcon {
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
-  border: 2px solid rgba(212, 175, 55, 0.1);
-  border-top: 2px solid #d4af37;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  border-radius: 11px;
+  background: var(--brand-50);
+  color: var(--brand-600);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.quickIcon svg {
+  width: 18px;
+  height: 18px;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .statsGrid {
+.quickCard h4 {
+  margin-top: 13px;
+  font-size: 14.5px;
+  letter-spacing: -0.015em;
+}
+
+.quickCard p {
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.quickLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 13px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--brand-600);
+  transition: gap 0.2s var(--ease);
+}
+
+.quickCard:hover .quickLink {
+  gap: 9px;
+}
+
+@media (max-width: 860px) {
+  .quickGrid {
     grid-template-columns: 1fr;
   }
-  .title {
-    font-size: 2rem;
+
+  .recentItem {
+    padding-left: 18px;
+    padding-right: 18px;
   }
 }

@@ -1,182 +1,444 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import style from './Ward.module.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiAlertCircle,
+  FiHash,
+  FiHome,
+  FiMapPin,
+  FiPlus,
+  FiSearch,
+  FiTrash2,
+} from "react-icons/fi";
+import { api } from "../../../api";
+import EmptyState from "../../../ui/EmptyState";
+import PageHeader from "../../../ui/PageHeader";
+import PageLoader from "../../../ui/PageLoader";
+import { useConfirm } from "../../../ui/ConfirmDialog";
+import { useToast } from "../../../ui/Toast";
+import styles from "./Ward.module.css";
 
 const Ward = () => {
-  const [value, setValue] = useState('');
-  const [wardNumber, setWardNumber] = useState('');
-  const [districtId, setDistrictId] = useState('');
-  const [panchayathId, setPanchayathId] = useState('');
+  const [value, setValue] = useState("");
+  const [wardNumber, setWardNumber] = useState("");
+  const [districtId, setDistrictId] = useState("");
+  const [panchayathId, setPanchayathId] = useState("");
 
   const [districts, setDistricts] = useState([]);
   const [panchayaths, setPanchayaths] = useState([]);
   const [wards, setWards] = useState([]);
+  const [query, setQuery] = useState("");
+  const [districtFilter, setDistrictFilter] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const loadWards = async () => {
+  const toast = useToast();
+  const confirm = useConfirm();
+
+  const loadWards = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/ward');
-      setWards(res.data.wardData || []);
-    } catch (err) { console.error(err); }
-  };
+      const res = await api.get("/ward");
+      setWards(res.data?.wardData || []);
+    } catch {
+      toast.error("Couldn't load wards", "Please refresh the page and try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
 
-  const fetchDistricts = async () => {
+  const loadDistricts = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/district');
-      setDistricts(res.data.districtData || []);
-    } catch (err) { console.error(err); }
-  };
-
-  const fetchPanchayaths = async (dId) => {
-    try {
-      setDistrictId(dId);
-      setPanchayathId('');
-      setErrors({ ...errors, district: '' });
-      if (!dId) { setPanchayaths([]); return; }
-      const res = await axios.get(`http://localhost:5000/panchayathByDistrict/${dId}`);
-      setPanchayaths(res.data.panchayathData || []);
-    } catch (err) { console.error(err); }
-  };
-
-  const handleSave = async () => {
-    let newErrors = {};
-    if (!districtId) newErrors.district = 'Required';
-    if (!panchayathId) newErrors.panchayath = 'Required';
-    if (!wardNumber.trim()) newErrors.wardNumber = 'Required';
-    if (!value.trim()) newErrors.wardName = 'Required';
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
-    try {
-      const res = await axios.post('http://localhost:5000/ward', {
-        wardName: value,
-        wardNumber,
-        panchayathId
-      });
-      alert(res.data.msg);
-      setValue(''); setWardNumber(''); setDistrictId(''); setPanchayathId('');
-      setPanchayaths([]); setErrors({}); loadWards();
-    } catch (err) { console.error(err); }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Permanently remove this ward?')) return;
-    try {
-      await axios.delete(`http://localhost:5000/ward/${id}`);
-      loadWards();
-    } catch (err) { console.error(err); }
-  };
+      const res = await api.get("/district");
+      setDistricts(res.data?.districtData || []);
+    } catch {
+      toast.error("Couldn't load districts", "Please refresh the page and try again.");
+    }
+  }, [toast]);
 
   useEffect(() => {
-    fetchDistricts();
+    loadDistricts();
     loadWards();
-  }, []);
+  }, [loadDistricts, loadWards]);
+
+  const fetchPanchayaths = async (dId) => {
+    setDistrictId(dId);
+    setPanchayathId("");
+    setErrors((prev) => ({ ...prev, district: "", panchayath: "" }));
+    if (!dId) {
+      setPanchayaths([]);
+      return;
+    }
+    try {
+      const res = await api.get(`/panchayathByDistrict/${dId}`);
+      setPanchayaths(res.data?.panchayathData || []);
+    } catch {
+      setPanchayaths([]);
+      toast.error("Couldn't load panchayaths", "Please choose the district again.");
+    }
+  };
+
+  const resetForm = () => {
+    setValue("");
+    setWardNumber("");
+    setDistrictId("");
+    setPanchayathId("");
+    setPanchayaths([]);
+    setErrors({});
+  };
+
+  const handleSave = async (event) => {
+    event?.preventDefault();
+    if (saving) return;
+
+    const nextErrors = {};
+    if (!districtId) nextErrors.district = "Choose a district.";
+    if (!panchayathId) nextErrors.panchayath = "Choose a panchayath.";
+    if (!wardNumber.trim()) nextErrors.wardNumber = "Enter the ward number.";
+    if (!value.trim()) nextErrors.wardName = "Enter the ward name.";
+
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSaving(true);
+    try {
+      await api.post("/ward", {
+        wardName: value.trim(),
+        wardNumber: wardNumber.trim(),
+        panchayathId,
+      });
+      toast.success(
+        "Ward added",
+        `Ward ${wardNumber.trim()} · ${value.trim()} is now available to citizens.`
+      );
+      resetForm();
+      await loadWards();
+    } catch {
+      toast.error("Couldn't add ward", "Please check your connection and try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (item) => {
+    const ok = await confirm({
+      title: `Delete ${item.wardName}?`,
+      message:
+        "Citizens registered in this ward and complaints already filed from it are not deleted, but new reports cannot be routed here.",
+      confirmLabel: "Delete ward",
+    });
+    if (!ok) return;
+
+    setDeletingId(item._id);
+    try {
+      await api.delete(`/ward/${item._id}`);
+      setWards((prev) => prev.filter((w) => w._id !== item._id));
+      toast.success("Ward deleted", `${item.wardName} has been removed.`);
+    } catch {
+      toast.error("Couldn't delete ward", "Please try again in a moment.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return wards.filter((w) => {
+      const district = w.panchayathId?.districtId;
+      const matchesQuery =
+        !q ||
+        w.wardName?.toLowerCase().includes(q) ||
+        String(w.wardNumber || "").toLowerCase().includes(q) ||
+        w.panchayathId?.panchayathName?.toLowerCase().includes(q) ||
+        district?.districtName?.toLowerCase().includes(q);
+      const matchesDistrict = !districtFilter || district?._id === districtFilter;
+      return matchesQuery && matchesDistrict;
+    });
+  }, [wards, query, districtFilter]);
+
+  const sorted = useMemo(
+    () =>
+      [...filtered].sort((a, b) =>
+        `${a.panchayathId?.panchayathName || ""}${String(a.wardNumber || "").padStart(4, "0")}`
+          .localeCompare(
+            `${b.panchayathId?.panchayathName || ""}${String(b.wardNumber || "").padStart(4, "0")}`
+          )
+      ),
+    [filtered]
+  );
 
   return (
-    <div className={style.page}>
-      <div className={style.wrapper}>
-        <header className={style.header}>
-          <span className={style.badge}>Territorial Management</span>
-          <h2 className={style.title}>Ward Directory</h2>
-          <p className={style.subtitle}>Detailed granular oversight of local electoral wards.</p>
-        </header>
+    <div className="cc-page">
+      <PageHeader
+        eyebrow="Location hierarchy"
+        title="Wards"
+        description="The most precise level of your civic map. Citizens register against a ward, and every complaint is routed from it."
+        meta={
+          <span className="cc-badge cc-badge--violet">
+            {wards.length} wards · {districts.length} districts
+          </span>
+        }
+      />
 
-        <section className={style.formCard}>
-          <h3 className={style.sectionTitle}>Registration Form</h3>
-          <div className={style.formGrid}>
-            <div className={style.field}>
-              <label>District</label>
-              <select 
-                className={`${style.input} ${errors.district ? style.inputError : ''}`} 
-                value={districtId} 
+      <div className={styles.layout}>
+        <section className={`cc-card ${styles.formCard}`}>
+          <div className="cc-card-head">
+            <div>
+              <h3>Register a ward</h3>
+              <p className={styles.headSub}>
+                Pick the panchayath first — wards can't move between panchayaths later.
+              </p>
+            </div>
+            <span className={styles.headIcon}>
+              <FiHash />
+            </span>
+          </div>
+
+          <form className="cc-card-body" onSubmit={handleSave} noValidate>
+            <div className="cc-field">
+              <label className="cc-label" htmlFor="ward-district">
+                <span>
+                  <FiMapPin /> District
+                </span>
+              </label>
+              <select
+                id="ward-district"
+                className={`cc-select ${errors.district ? "is-invalid" : ""}`}
+                value={districtId}
                 onChange={(e) => fetchPanchayaths(e.target.value)}
               >
-                <option value="">Select District</option>
-                {districts.map(d => <option key={d._id} value={d._id}>{d.districtName}</option>)}
+                <option value="">Choose a district</option>
+                {districts.map((d) => (
+                  <option key={d._id} value={d._id}>
+                    {d.districtName}
+                  </option>
+                ))}
               </select>
-              {errors.district && <span className={style.error}>{errors.district}</span>}
+              {errors.district && (
+                <span className="cc-error">
+                  <FiAlertCircle /> {errors.district}
+                </span>
+              )}
             </div>
 
-            <div className={style.field}>
-              <label>Panchayath</label>
-              <select 
-                className={`${style.input} ${errors.panchayath ? style.inputError : ''}`} 
-                value={panchayathId} 
-                onChange={(e) => { setPanchayathId(e.target.value); setErrors({...errors, panchayath: ''}) }} 
+            <div className="cc-field">
+              <label className="cc-label" htmlFor="ward-panchayath">
+                <span>
+                  <FiHome /> Panchayath
+                </span>
+              </label>
+              <select
+                id="ward-panchayath"
+                className={`cc-select ${errors.panchayath ? "is-invalid" : ""}`}
+                value={panchayathId}
+                onChange={(e) => {
+                  setPanchayathId(e.target.value);
+                  setErrors((prev) => ({ ...prev, panchayath: "" }));
+                }}
                 disabled={!districtId}
+                aria-describedby={!districtId ? "ward-panchayath-hint" : undefined}
               >
-                <option value="">Select Panchayath</option>
-                {panchayaths.map(p => <option key={p._id} value={p._id}>{p.panchayathName}</option>)}
+                <option value="">
+                  {districtId ? "Choose a panchayath" : "Select a district first"}
+                </option>
+                {panchayaths.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.panchayathName}
+                  </option>
+                ))}
               </select>
-              {errors.panchayath && <span className={style.error}>{errors.panchayath}</span>}
+              {errors.panchayath ? (
+                <span className="cc-error">
+                  <FiAlertCircle /> {errors.panchayath}
+                </span>
+              ) : (
+                <span className="cc-hint" id="ward-panchayath-hint">
+                  {districtId && panchayaths.length === 0
+                    ? "No panchayaths in this district yet."
+                    : "Ward routing follows this panchayath."}
+                </span>
+              )}
             </div>
 
-            <div className={style.field}>
-              <label>Ward No.</label>
-              <input 
-                type="text" 
-                className={`${style.input} ${errors.wardNumber ? style.inputError : ''}`} 
-                placeholder="e.g. 01" 
-                value={wardNumber} 
-                onChange={(e) => {setWardNumber(e.target.value); setErrors({...errors, wardNumber: ''})}} 
-              />
-              {errors.wardNumber && <span className={style.error}>{errors.wardNumber}</span>}
+            <div className={styles.pair}>
+              <div className="cc-field">
+                <label className="cc-label" htmlFor="ward-number">
+                  Ward no.
+                </label>
+                <input
+                  id="ward-number"
+                  className={`cc-input ${errors.wardNumber ? "is-invalid" : ""}`}
+                  placeholder="e.g. 04"
+                  maxLength={10}
+                  value={wardNumber}
+                  onChange={(e) => {
+                    setWardNumber(e.target.value);
+                    setErrors((prev) => ({ ...prev, wardNumber: "" }));
+                  }}
+                />
+                {errors.wardNumber && (
+                  <span className="cc-error">
+                    <FiAlertCircle /> {errors.wardNumber}
+                  </span>
+                )}
+              </div>
+
+              <div className="cc-field">
+                <label className="cc-label" htmlFor="ward-name">
+                  Ward name
+                </label>
+                <input
+                  id="ward-name"
+                  className={`cc-input ${errors.wardName ? "is-invalid" : ""}`}
+                  placeholder="e.g. North Colony"
+                  maxLength={60}
+                  value={value}
+                  onChange={(e) => {
+                    setValue(e.target.value);
+                    setErrors((prev) => ({ ...prev, wardName: "" }));
+                  }}
+                />
+                {errors.wardName && (
+                  <span className="cc-error">
+                    <FiAlertCircle /> {errors.wardName}
+                  </span>
+                )}
+              </div>
             </div>
 
-            <div className={style.field}>
-              <label>Ward Name</label>
-              <input 
-                type="text" 
-                className={`${style.input} ${errors.wardName ? style.inputError : ''}`} 
-                placeholder="Name of ward" 
-                value={value} 
-                onChange={(e) => {setValue(e.target.value); setErrors({...errors, wardName: ''})}} 
-              />
-              {errors.wardName && <span className={style.error}>{errors.wardName}</span>}
-            </div>
+            <button
+              type="submit"
+              className="cc-btn cc-btn--primary cc-btn--block"
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <span className={styles.spinner} aria-hidden="true" />
+                  Saving…
+                </>
+              ) : (
+                <>
+                  <FiPlus /> Add ward
+                </>
+              )}
+            </button>
+          </form>
 
-            <button className={style.primaryBtn} onClick={handleSave}>Save Ward</button>
+          <div className={styles.formNote}>
+            Tip: wards are sorted by panchayath and ward number in the directory.
           </div>
         </section>
 
-        <section className={style.tableCard}>
-          <div className={style.tableHeader}>
-            <h3 className={style.sectionTitle}>Census of Wards</h3>
-            <span className={style.countBadge}>{wards.length} Entries</span>
+        <section className={`cc-card ${styles.tableCard}`}>
+          <div className={styles.tableHead}>
+            <div>
+              <h3>Ward directory</h3>
+              <p className={styles.headSub}>
+                {query || districtFilter
+                  ? `${sorted.length} of ${wards.length} shown`
+                  : `${wards.length} registered ${wards.length === 1 ? "ward" : "wards"}`}
+              </p>
+            </div>
+
+            <div className={styles.tools}>
+              <div className="cc-search">
+                <FiSearch />
+                <input
+                  type="search"
+                  placeholder="Search wards"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  aria-label="Search wards"
+                />
+              </div>
+              <select
+                className={`cc-select ${styles.filterSelect}`}
+                value={districtFilter}
+                onChange={(e) => setDistrictFilter(e.target.value)}
+                aria-label="Filter by district"
+              >
+                <option value="">All districts</option>
+                {districts.map((d) => (
+                  <option key={d._id} value={d._id}>
+                    {d.districtName}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className={style.tableWrapper}>
-            <table className={style.districtTable}>
-              <thead>
-                <tr>
-                  <th style={{width: '60px'}}>Sl</th>
-                  <th>District</th>
-                  <th>Panchayath</th>
-                  <th style={{width: '100px'}}>No.</th>
-                  <th>Ward Name</th>
-                  <th style={{textAlign: 'right'}}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {wards.length > 0 ? (
-                  wards.map((w, index) => (
-                    <tr className={style.districtName} key={w._id}>
-                      <td>{index + 1}</td>
-                      <td className={style.districtName}>{w.panchayathId?.districtId?.districtName || '—'}</td>
-                      <td className={style.districtName}>{w.panchayathId?.panchayathName || '—'}</td>
-                      <td><span className={style.wardNo}>{w.wardNumber}</span></td>
-                      <td className={style.districtName}>{w.wardName}</td>
-                      <td style={{textAlign: 'right'}}>
-                        <button className={style.deleteBtn} onClick={() => handleDelete(w._id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr><td colSpan="6" className={style.emptyState}>No ward data synchronized.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+
+          {loading ? (
+            <PageLoader label="Loading wards" rows={2} />
+          ) : sorted.length === 0 ? (
+            <EmptyState
+              icon={FiHash}
+              title={wards.length === 0 ? "No wards yet" : "No matching wards"}
+              description={
+                wards.length === 0
+                  ? "Register your first ward so citizens can link their address to it."
+                  : "Try clearing the search or district filter."
+              }
+              action={
+                query || districtFilter ? (
+                  <button
+                    type="button"
+                    className="cc-btn cc-btn--secondary"
+                    onClick={() => {
+                      setQuery("");
+                      setDistrictFilter("");
+                    }}
+                  >
+                    Clear filters
+                  </button>
+                ) : null
+              }
+            />
+          ) : (
+            <div className={styles.tableScroll}>
+              <table className={`cc-table ${styles.table}`}>
+                <thead>
+                  <tr>
+                    <th style={{ width: 90 }}>Ward</th>
+                    <th>Ward name</th>
+                    <th>Panchayath</th>
+                    <th>District</th>
+                    <th className="cc-td-actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sorted.map((w) => {
+                    const panchayath = w.panchayathId;
+                    const district = panchayath?.districtId;
+                    return (
+                      <tr key={w._id}>
+                        <td>
+                          <span className={styles.wardNo}>#{w.wardNumber || "—"}</span>
+                        </td>
+                        <td>
+                          <strong>{w.wardName}</strong>
+                        </td>
+                        <td>{panchayath?.panchayathName || "—"}</td>
+                        <td>
+                          <span className="cc-badge cc-badge--brand">
+                            <FiMapPin /> {district?.districtName || "—"}
+                          </span>
+                        </td>
+                        <td className="cc-td-actions">
+                          <button
+                            type="button"
+                            className="cc-btn cc-btn--sm cc-btn--danger"
+                            onClick={() => handleDelete(w)}
+                            disabled={deletingId === w._id}
+                          >
+                            <FiTrash2 /> {deletingId === w._id ? "Deleting…" : "Delete"}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </div>
     </div>

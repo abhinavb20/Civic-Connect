@@ -1,157 +1,457 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import style from "./ViewComplaint.module.css";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiAlertCircle,
+  FiCalendar,
+  FiCheckCircle,
+  FiChevronDown,
+  FiClock,
+  FiFileText,
+  FiInbox,
+  FiMapPin,
+  FiRefreshCw,
+  FiSearch,
+  FiTrendingUp,
+} from "react-icons/fi";
+import { api, fileUrl } from "../../../api";
+import Avatar from "../../../ui/Avatar";
+import EmptyState from "../../../ui/EmptyState";
+import Lightbox from "../../../ui/Lightbox";
+import PageHeader from "../../../ui/PageHeader";
+import PageLoader from "../../../ui/PageLoader";
+import StatusPill from "../../../ui/StatusPill";
+import { useToast } from "../../../ui/Toast";
+import styles from "./ViewComplaint.module.css";
+
+const STATUS_OPTIONS = ["Submitted", "Verified", "In Progress", "Resolved", "Closed", "Rejected"];
+const OPEN_STATUSES = ["Submitted", "Verified", "In Progress"];
+const PAGE_SIZE = 15;
+
+const formatDate = (value) => {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
 
 const ViewComplaint = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("All");
+  const [expanded, setExpanded] = useState({});
+  const [savingId, setSavingId] = useState(null);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [preview, setPreview] = useState(null);
 
-  const loadComplaints = async () => {
+  const toast = useToast();
+
+  const loadComplaints = useCallback(async () => {
+    setLoading(true);
+    setError("");
     try {
-      setLoading(true);
-      const res = await axios.get("http://localhost:5000/admin/complaints");
-      setComplaints(res.data.data || []);
-    } catch (err) {
-      console.error(err);
+      const res = await api.get("/admin/complaints");
+      setComplaints(res.data?.data || []);
+    } catch {
+      setError("We couldn't load the complaint registry. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const updateStatus = async (id, newStatus) => {
-    try {
-      await axios.put(`http://localhost:5000/complaint/${id}/status`, {
-        status: newStatus,
-      });
-
-      // update UI instantly
-      setComplaints((prev) =>
-        prev.map((c) =>
-          c._id === id ? { ...c, complaintStatus: newStatus } : c
-        )
-      );
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update status");
-    }
-  };
+  }, []);
 
   useEffect(() => {
     loadComplaints();
-  }, []);
+  }, [loadComplaints]);
 
-  if (loading) {
-    return (
-      <div className={style.page}>
-        <div className={style.wrapper}>
-          <div className={style.loadingCard}>SYNCHRONIZING RECORDS...</div>
-        </div>
-      </div>
+  useEffect(() => {
+    setLimit(PAGE_SIZE);
+  }, [query, filter]);
+
+  const updateStatus = async (item, status) => {
+    if (status === item.complaintStatus) return;
+    const previous = item.complaintStatus;
+    setSavingId(item._id);
+    setComplaints((prev) =>
+      prev.map((c) => (c._id === item._id ? { ...c, complaintStatus: status } : c))
     );
-  }
+    try {
+      await api.put(`/complaint/${item._id}/status`, { status });
+      toast.success(
+        "Status updated",
+        `${item.complaintTitle} is now marked ${status.toLowerCase()}.`
+      );
+    } catch {
+      setComplaints((prev) =>
+        prev.map((c) =>
+          c._id === item._id ? { ...c, complaintStatus: previous || "Submitted" } : c
+        )
+      );
+      toast.error("Couldn't update status", "Please try again in a moment.");
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  const counts = useMemo(() => {
+    const total = complaints.length;
+    const open = complaints.filter((c) => OPEN_STATUSES.includes(c.complaintStatus)).length;
+    const resolved = complaints.filter((c) => c.complaintStatus === "Resolved").length;
+    const rate = total > 0 ? Math.round((resolved / total) * 100) : 0;
+    return { total, open, resolved, rate };
+  }, [complaints]);
+
+  const availableStatuses = useMemo(() => {
+    const present = new Set(
+      complaints.map((c) => c.complaintStatus).filter((s) => STATUS_OPTIONS.includes(s))
+    );
+    return ["All", ...STATUS_OPTIONS.filter((s) => present.has(s))];
+  }, [complaints]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return complaints.filter((c) => {
+      const matchesFilter = filter === "All" || c.complaintStatus === filter;
+      const matchesQuery =
+        !q ||
+        c.complaintTitle?.toLowerCase().includes(q) ||
+        c.complaintContent?.toLowerCase().includes(q) ||
+        c.userId?.userName?.toLowerCase().includes(q) ||
+        c.panchayathId?.panchayathName?.toLowerCase().includes(q) ||
+        c.wardId?.wardName?.toLowerCase().includes(q) ||
+        c.departmentId?.departmentName?.toLowerCase().includes(q);
+      return matchesFilter && matchesQuery;
+    });
+  }, [complaints, filter, query]);
+
+  const visible = filtered.slice(0, limit);
 
   return (
-    <div className={style.page}>
-      <div className={style.wrapper}>
-        <header className={style.header}>
-          <span className={style.badge}>Administrative Console</span>
-          <h2 className={style.title}>Citizen Insights</h2>
-          <p className={style.subtitle}>
-            A granular oversight of community issues. This portal provides read-only transparency into the resolution workflow managed by local authorities.
-          </p>
-        </header>
+    <div className="cc-page">
+      <PageHeader
+        eyebrow="Oversight"
+        title="Complaint registry"
+        description="Every report filed across the platform. Use this read-only view to audit how authorities are responding, and unblock cases when needed."
+        actions={
+          <button
+            type="button"
+            className="cc-btn cc-btn--secondary"
+            onClick={loadComplaints}
+            disabled={loading}
+          >
+            <FiRefreshCw className={loading ? styles.spin : ""} /> Refresh
+          </button>
+        }
+        meta={
+          <>
+            <span className="cc-badge cc-badge--brand">{counts.total} total</span>
+            <span className="cc-badge cc-badge--amber">{counts.open} open</span>
+          </>
+        }
+      />
 
-        <section className={style.summaryCard}>
-          <div className={style.summaryItem}>
-            <h4>Global Submissions</h4>
-            <span>{complaints.length}</span>
+      {error && (
+        <div className="cc-note cc-note--rose" style={{ marginBottom: 20 }} role="alert">
+          <FiAlertCircle /> {error}
+        </div>
+      )}
+
+      <div className={styles.summary}>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryIcon}>
+            <FiFileText />
+          </span>
+          <div>
+            <strong>{counts.total}</strong>
+            <span>All submissions</span>
           </div>
-          <div className={style.summaryItem}>
-            <h4>Active Resolution Rate</h4>
-            <span>{Math.round((complaints.filter(c => c.complaintStatus === 'Resolved').length / complaints.length) * 100 || 0)}%</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={`${styles.summaryIcon} ${styles.amber}`}>
+            <FiClock />
+          </span>
+          <div>
+            <strong>{counts.open}</strong>
+            <span>Awaiting resolution</span>
           </div>
-        </section>
-
-        <div className={style.tableCard}>
-          <div className={style.tableHeader}>
-            <h3 className={style.sectionTitle}>Complaint Registry</h3>
-            <div className={style.countBadge}>{complaints.length} Total Entries</div>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={`${styles.summaryIcon} ${styles.green}`}>
+            <FiCheckCircle />
+          </span>
+          <div>
+            <strong>{counts.resolved}</strong>
+            <span>Resolved</span>
           </div>
-
-          <div className={style.tableWrapper}>
-            <table className={style.complaintTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: "50px" }}>ID</th>
-                  <th>Originator</th>
-                  <th>Jurisdiction</th>
-                  <th>Category</th>
-                  <th>Incident Details</th>
-                  <th>Evidence</th>
-                  <th style={{ textAlign: "right" }}>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {complaints.length > 0 ? (
-                  complaints.map((item, index) => (
-                    <tr key={item._id}>
-                      <td>{(index + 1).toString().padStart(2, '0')}</td>
-                      <td className={style.userName}>
-                        {item.userId?.userName || "Anonymous"}
-                      </td>
-                      <td className={style.locationInfo}>
-                        <strong>{item.panchayathId?.panchayathName}</strong>
-                        <small>{item.wardId?.wardName} (Ward {item.wardId?.wardNumber})</small>
-                      </td>
-                      <td>{item.departmentId?.departmentName || "General"}</td>
-                      <td>
-                        <span className={style.complaintTitle}>{item.complaintTitle}</span>
-                        <p className={style.complaintContent}>{item.complaintContent}</p>
-                      </td>
-                      <td>
-                        <div className={style.imageGallery}>
-                          {item.complaintPhotos?.length > 0 ? (
-                            item.complaintPhotos.slice(0, 3).map((img, i) => (
-                              <img
-                                key={i}
-                                src={`http://localhost:5000${img}`}
-                                className={style.complaintImg}
-                                alt="Evidence"
-                                onClick={() => window.open(`http://localhost:5000${img}`, "_blank")}
-                              />
-                            ))
-                          ) : (
-                            <span style={{ color: "#ccc", fontSize: "0.7rem" }}>NO MEDIA</span>
-                          )}
-                        </div>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        <select
-                          className={style.statusDropdown}
-                          value={item.complaintStatus || "Submitted"}
-                          onChange={(e) => updateStatus(item._id, e.target.value)}
-                        >
-                          <option value="Submitted">Submitted</option>
-                          <option value="Verified">Verified</option>
-                          <option value="In Progress">In Progress</option>
-                          <option value="Resolved">Resolved</option>
-                          <option value="Closed">Closed</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className={style.emptyState}>No data currently synchronized.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={`${styles.summaryIcon} ${styles.teal}`}>
+            <FiTrendingUp />
+          </span>
+          <div>
+            <strong>{counts.rate}%</strong>
+            <span>Resolution rate</span>
           </div>
         </div>
       </div>
+
+      <div className={styles.toolbar}>
+        <div className="cc-search">
+          <FiSearch />
+          <input
+            type="search"
+            placeholder="Search complaint, citizen, ward, or department"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search complaints"
+          />
+        </div>
+        <div className={styles.filters}>
+          {availableStatuses.map((status) => (
+            <button
+              key={status}
+              type="button"
+              className={`cc-chip ${filter === status ? "is-active" : ""}`}
+              onClick={() => setFilter(status)}
+            >
+              {status}
+              {status !== "All" && (
+                <span className="cc-chip-count">
+                  {complaints.filter((c) => c.complaintStatus === status).length}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <PageLoader label="Loading the complaint registry" rows={3} />
+      ) : filtered.length === 0 ? (
+        <div className="cc-card">
+          <EmptyState
+            icon={FiInbox}
+            title={complaints.length === 0 ? "No complaints yet" : "No matching complaints"}
+            description={
+              complaints.length === 0
+                ? "When citizens file reports, they will appear here for platform-wide oversight."
+                : "Try a different search term or status filter."
+            }
+            action={
+              complaints.length > 0 ? (
+                <button
+                  type="button"
+                  className="cc-btn cc-btn--secondary"
+                  onClick={() => {
+                    setQuery("");
+                    setFilter("All");
+                  }}
+                >
+                  Clear filters
+                </button>
+              ) : null
+            }
+          />
+        </div>
+      ) : (
+        <>
+          <div className={styles.tableCard}>
+            <div className={styles.tableScroll}>
+              <table className={`cc-table ${styles.table}`}>
+                <thead>
+                  <tr>
+                    <th>Citizen</th>
+                    <th>Complaint</th>
+                    <th>Jurisdiction</th>
+                    <th>Evidence</th>
+                    <th>Status</th>
+                    <th style={{ width: 48 }} aria-label="Expand" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((item) => {
+                    const isOpen = Boolean(expanded[item._id]);
+                    const photos = item.complaintPhotos || [];
+                    return (
+                      <React.Fragment key={item._id}>
+                        <tr className={isOpen ? styles.openRow : ""}>
+                          <td>
+                            <div className={styles.person}>
+                              <Avatar name={item.userId?.userName} size="sm" />
+                              <strong>{item.userId?.userName || "Anonymous"}</strong>
+                            </div>
+                          </td>
+                          <td className={styles.complaintCell}>
+                            <strong>{item.complaintTitle}</strong>
+                            <span>{item.departmentId?.departmentName || "General"}</span>
+                          </td>
+                          <td>
+                            <div className={styles.jurisdiction}>
+                              <span>
+                                <FiMapPin />
+                                {item.panchayathId?.panchayathName || "—"}
+                              </span>
+                              <span>
+                                {item.wardId?.wardName || "—"}
+                                {item.wardId?.wardNumber ? ` · #${item.wardId.wardNumber}` : ""}
+                              </span>
+                            </div>
+                          </td>
+                          <td>
+                            {photos.length > 0 ? (
+                              <div className={styles.thumbs}>
+                                {photos.slice(0, 2).map((img, i) => (
+                                  <button
+                                    key={`${item._id}-thumb-${i}`}
+                                    type="button"
+                                    className={styles.thumb}
+                                    onClick={() =>
+                                      setPreview({ src: fileUrl(img), caption: item.complaintTitle })
+                                    }
+                                    aria-label={`View evidence ${i + 1} for ${item.complaintTitle}`}
+                                  >
+                                    <img src={fileUrl(img)} alt="" loading="lazy" />
+                                  </button>
+                                ))}
+                                {photos.length > 2 && (
+                                  <span className={styles.moreCount}>+{photos.length - 2}</span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className={styles.noMedia}>None</span>
+                            )}
+                          </td>
+                          <td>
+                            <select
+                              className={`cc-select ${styles.statusSelect}`}
+                              value={item.complaintStatus || "Submitted"}
+                              onChange={(e) => updateStatus(item, e.target.value)}
+                              disabled={savingId === item._id}
+                              aria-label={`Status for ${item.complaintTitle}`}
+                            >
+                              {STATUS_OPTIONS.map((status) => (
+                                <option key={status} value={status}>
+                                  {status}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className={styles.expandBtn}
+                              onClick={() =>
+                                setExpanded((prev) => ({ ...prev, [item._id]: !prev[item._id] }))
+                              }
+                              aria-expanded={isOpen}
+                              aria-label={
+                                isOpen
+                                  ? `Hide details for ${item.complaintTitle}`
+                                  : `Show details for ${item.complaintTitle}`
+                              }
+                            >
+                              <FiChevronDown className={isOpen ? styles.chevronUp : ""} />
+                            </button>
+                          </td>
+                        </tr>
+
+                        {isOpen && (
+                          <tr className={styles.detailRow}>
+                            <td colSpan={6}>
+                              <div className={styles.detail}>
+                                <div className={styles.detailMain}>
+                                  <h4>Full report</h4>
+                                  <p>
+                                    {item.complaintContent ||
+                                      "No additional description was provided."}
+                                  </p>
+
+                                  {photos.length > 0 && (
+                                    <div className={styles.detailGallery}>
+                                      {photos.map((img, i) => (
+                                        <button
+                                          key={`${item._id}-detail-${i}`}
+                                          type="button"
+                                          className={styles.detailThumb}
+                                          onClick={() =>
+                                            setPreview({
+                                              src: fileUrl(img),
+                                              caption: `${item.complaintTitle} — evidence ${i + 1}`,
+                                            })
+                                          }
+                                        >
+                                          <img
+                                            src={fileUrl(img)}
+                                            alt={`Evidence ${i + 1}`}
+                                            loading="lazy"
+                                          />
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+
+                                <aside className={styles.detailSide}>
+                                  <div className={styles.detailMeta}>
+                                    <span>
+                                      <FiMapPin />{" "}
+                                      {[
+                                        item.panchayathId?.panchayathName,
+                                        item.wardId?.wardName,
+                                      ]
+                                        .filter(Boolean)
+                                        .join(" · ") || "Jurisdiction unavailable"}
+                                    </span>
+                                    <span>
+                                      <FiFileText />{" "}
+                                      {item.departmentId?.departmentName || "General"}
+                                    </span>
+                                    <span>
+                                      <FiCalendar /> Filed {formatDate(item.createdAt)}
+                                    </span>
+                                  </div>
+                                  <div className={styles.detailStatus}>
+                                    <span>Current status</span>
+                                    <StatusPill status={item.complaintStatus || "Submitted"} />
+                                  </div>
+                                  <code className={styles.idChip}>#{item._id.slice(-8)}</code>
+                                </aside>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className={styles.footer}>
+            <span className={styles.footerText}>
+              Showing {visible.length} of {filtered.length}
+              {filtered.length !== complaints.length ? ` (filtered from ${complaints.length})` : ""}
+            </span>
+            {limit < filtered.length && (
+              <button
+                type="button"
+                className="cc-btn cc-btn--secondary cc-btn--sm"
+                onClick={() => setLimit((prev) => prev + PAGE_SIZE)}
+              >
+                Load more
+              </button>
+            )}
+          </div>
+        </>
+      )}
+
+      <Lightbox
+        src={preview?.src}
+        caption={preview?.caption}
+        onClose={() => setPreview(null)}
+      />
     </div>
   );
 };
